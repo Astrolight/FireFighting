@@ -27,13 +27,16 @@ class World(object):
         self.biomassMatrix = np.ones(size)
         self.treeAgeMatrix = np.ones(size)
 
-    def getCurrentTemprature(self):
+    def getWorldCurrentTemprature(self):
         '''
-
+        Calculates the world base temprature for a perticular day/time
         '''
         NotImplementedError
 
     def chanceOfRain(self):
+        '''
+        Returns the chance out of 1 for rain to happen on that day
+        '''
         NotImplementedError
 
 
