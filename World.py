@@ -39,6 +39,13 @@ class World(object):
         '''
         NotImplementedError
 
+    def step(self):
+        '''
+        Steps the simulation by deltaT time.
+        Simulates tree growth and other requeired processes. 
+        '''
+        NotImplementedError
+
 
 # For debuging purposes
 if __name__=='__main__':
