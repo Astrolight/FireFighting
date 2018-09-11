@@ -41,7 +41,7 @@ classdef World < handle
         end
         
         function tempratureArray = getTempratureArray(obj)
-            tempratureArray = obj.dataCells{:,:}.Temprature
+            tempratureArray = obj.dataCells{:,:}.Temprature;
         end
     end
     
