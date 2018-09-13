@@ -1,6 +1,19 @@
 import numba
 import numpy as np
 
+class TreeCell(object):
+    '''
+    Class to store the data and functions to act on the data of a single cell
+    '''
+
+    AVERAGETREEAGE = 150 # Years
+
+    def __init__(self):
+        pass
+
+    def step(self):
+        raise NotImplementedError
+
 class World(object):
     '''
     Class to store the information of and control the simulation of a forest fire.
@@ -11,8 +24,6 @@ class World(object):
         Defines the size of the simulation in terms of how many subsections there are
     '''
 
-    AVERAGETREEAGE = 150 # Years
-
     def __init__(self, size):
         self.simTime = 0
         self.deltaTime = 0.1 # Seconds
@@ -21,30 +32,24 @@ class World(object):
             # Sets up for size to be the dims of a 2D matrix
             size = (size,size)
 
-        # Matrixes contaning world data
-        self.tempratureMatrix = np.ones(size)
-        self.waterLevelMatrix = np.ones(size)
-        self.biomassMatrix = np.ones(size)
-        self.treeAgeMatrix = np.ones(size)
-
     def getWorldCurrentTemprature(self):
         '''
         Calculates the world base temprature for a perticular day/time
         '''
-        NotImplementedError
+        raise NotImplementedError
 
     def chanceOfRain(self):
         '''
         Returns the chance out of 1 for rain to happen on that day
         '''
-        NotImplementedError
+        raise NotImplementedError
 
     def step(self):
         '''
         Steps the simulation by deltaT time.
         Simulates tree growth and other requeired processes. 
         '''
-        NotImplementedError
+        raise NotImplementedError
 
 
 # For debuging purposes
