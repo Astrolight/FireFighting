@@ -6,22 +6,12 @@ classdef World < handle
         deltaT = 0.1 %Seconds
         simulationTime = 0 %Time since simulation began
         
-        %World data storage cells
+        %Ver to store world data in
         dataCells
-        %Structure to store data in
-        cellData=struct(...
-                'Temprature', [], ...
-                'Water_Level', [], ...
-                'Tree_Age', [], ...
-                'Biomass', [] ...
-                )
         
         %World information
         worldTemprature = 20 %Deg c
         worldSize
-        
-        %Plant proprties
-        typicalTreeAge = 150 %Years
     end
     
     methods
@@ -32,7 +22,8 @@ classdef World < handle
             
             obj.worldSize = World_Size;
             
-            obj.dataCells(obj.worldSize(:)) = obj.cellData;
+            obj.dataCells = cell(obj.worldSize);
+            obj.dataCells(:) = {TreeCell(5,5)};
         end
         
         function obj = step(obj)
@@ -42,6 +33,13 @@ classdef World < handle
         
         function tempratureArray = getTempratureArray(obj)
             tempratureArray = obj.dataCells{:,:}.Temprature;
+        end
+    end
+    
+        
+    methods (Access=private, Static=true)
+        function biomassMap = generateInitBiomass(World_Size)
+            biomassMap = perlin2D(World_Size);
         end
     end
     
