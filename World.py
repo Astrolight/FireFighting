@@ -1,6 +1,6 @@
 import numpy as np
 
-from scipy.constants import convert_temperature
+from scipy.constants import convert_temperature, pi
 
 class TreeCell(object):
     '''
@@ -61,7 +61,24 @@ class World(object):
         '''
         Calculates the world base temprature for a perticular day/time
         '''
-        raise NotImplementedError
+        # Simplistic modeling of temprature
+        JanHigh = 2
+        JanLow = -6
+        JanAvg = np.mean((JanHigh, JanLow))
+
+        JulHigh = 30
+        JulLow = 18
+        JulAvg = np.mean((JulHigh, JulLow))
+
+        YearAvg = np.mean((JanAvg, JulAvg))
+
+        dayNumberinYear = self.simTime/60/24
+
+        dayResolutionTemp = (JulAvg - JanAvg)/2 * np.sin(2*pi * dayNumberinYear/365 - pi/2) + YearAvg
+
+        minuteResolutionTemp = (JanHigh - JanLow)*np.sin(self.simTime % (60*24) - pi/2) + dayResolutionTemp
+
+        return minuteResolutionTemp
 
     def chanceOfRain(self):
         '''
@@ -82,3 +99,4 @@ if __name__=='__main__':
     test=World(6)
 
     test.getWorldTempratureArray()
+    test.getWorldCurrentTemprature()
