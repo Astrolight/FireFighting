@@ -1,5 +1,7 @@
 import numpy as np
 
+from scipy.constants import convert_temperature
+
 class TreeCell(object):
     '''
     Class to store the data and functions to act on the data of a single cell
@@ -35,7 +37,7 @@ class World(object):
     '''
 
     def __init__(self, size):
-        self.simTime = 0
+        self.simTime = 0 # Minutes
         self.deltaTime = 0.1 # Minutes
         
         # Sets the world size
