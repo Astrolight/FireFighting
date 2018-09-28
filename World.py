@@ -84,7 +84,9 @@ class World(object):
         '''
         Returns the chance out of 1 for rain to happen on that day
         '''
-        raise NotImplementedError
+        # According to NOAA for dayton at least there are 8 days on avg per month with rain
+
+        return  (8*12)/ 365
 
     def step(self):
         '''
@@ -100,3 +102,4 @@ if __name__=='__main__':
 
     test.getWorldTempratureArray()
     test.getWorldCurrentTemprature()
+    test.chanceOfRain()
