@@ -48,7 +48,12 @@ class World(object):
         self.world = [[TreeCell(self.worldTemp) for x in range(size)] for y in range(size)]
 
     def getWorldTempratureArray(self):
-        TempArray = np.array(self.worldSize)
+        x = self.worldSize[0]
+        y = self.worldSize[1]
+
+        TempratureArray = [[self.world[x][y].temprature for x in range(x)] for y in range(y)]
+
+        return TempratureArray
         
     def getWorldCurrentTemprature(self):
         '''
