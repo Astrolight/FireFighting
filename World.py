@@ -1,4 +1,3 @@
-import numba
 import numpy as np
 
 class TreeCell(object):
@@ -8,10 +7,21 @@ class TreeCell(object):
 
     AVERAGETREEAGE = 150 # Years
 
-    def __init__(self):
-        pass
+    def __init__(self, init_temp):
+        self.temprature = init_temp
+        self.age = 0 # Minutes
 
-    def step(self):
+    def step(self, dtime):
+        '''
+        Simulates the growth of trees
+
+        Parameters
+        ----------
+        dtime: float
+            The ammount of time in minutes to step the simulation
+        '''
+        self.age += dtime
+
         raise NotImplementedError
 
 class World(object):
@@ -26,11 +36,13 @@ class World(object):
 
     def __init__(self, size):
         self.simTime = 0
-        self.deltaTime = 0.1 # Seconds
+        self.deltaTime = 0.1 # Minutes
 
-        if ~isinstance(size, tuple):
-            # Sets up for size to be the dims of a 2D matrix
-            size = (size,size)
+        # The inital world temprature in centegrade
+        self.worldTemp = 25
+
+        # Creates a 2d list/array of TreeCell objects
+        self.world = [TreeCell(self.worldTemp) for x in range(size) for y in range(size)]
 
     def getWorldCurrentTemprature(self):
         '''
