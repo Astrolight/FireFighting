@@ -1,5 +1,7 @@
 import numpy as np
 
+from scipy.constants import convert_temperature
+
 class TreeCell(object):
     '''
     Class to store the data and functions to act on the data of a single cell
@@ -35,7 +37,7 @@ class World(object):
     '''
 
     def __init__(self, size):
-        self.simTime = 0
+        self.simTime = 0 # Minutes
         self.deltaTime = 0.1 # Minutes
         
         # Sets the world size
@@ -45,10 +47,15 @@ class World(object):
         self.worldTemp = 25
 
         # Creates a 2d list/array of TreeCell objects
-        self.world = [TreeCell[x,y](self.worldTemp) for x in range(size) for y in range(size)]
+        self.world = [[TreeCell(self.worldTemp) for x in range(size)] for y in range(size)]
 
     def getWorldTempratureArray(self):
-        TempArray = np.array(self.worldSize)
+        x = self.worldSize[0]
+        y = self.worldSize[1]
+
+        TempratureArray = [[self.world[x][y].temprature for x in range(x)] for y in range(y)]
+
+        return TempratureArray
         
     def getWorldCurrentTemprature(self):
         '''
