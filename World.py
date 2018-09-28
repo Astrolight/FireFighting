@@ -1,5 +1,6 @@
 import numpy as np
 
+from scipy.signal import convolve2d
 from scipy.constants import convert_temperature, pi
 
 class TreeCell(object):
@@ -44,7 +45,7 @@ class World(object):
         self.worldSize = (size, size)
 
         # The inital world temprature in centegrade
-        self.worldTemp = 25
+        self.worldTemp = self.getWorldCurrentTemprature()
 
         # Creates a 2d list/array of TreeCell objects
         self.world = [[TreeCell(self.worldTemp) for x in range(size)] for y in range(size)]
@@ -88,12 +89,31 @@ class World(object):
 
         return  (8*12)/ 365
 
+    def calculateTempratureChanges(self):
+        tempratureArray = self.getWorldTempratureArray()
+        currentWorldTemp = self.getWorldCurrentTemprature()
+
+        tempratureWeights = np.array([[  0,0.2,  0],
+                                      [0.2,0.2,0.2],
+                                      [  0,0.2,  0]])
+
+        # Makes sure we dont create energy
+        assert 1 == np.sum(tempratureWeights)
+
+        newTempratures = convolve2d(in1=tempratureArray, in2=tempratureWeights, mode='same', fillvalue=currentWorldTemp)
+
+        return newTempratures
+
     def step(self):
         '''
         Steps the simulation by deltaT time.
         Simulates tree growth and other requeired processes. 
         '''
-        raise NotImplementedError
+        self.simTime += self.deltaTime
+
+        newTempratures = self.calculateTempratureChanges()
+
+        pass
 
 
 # For debuging purposes
@@ -103,3 +123,5 @@ if __name__=='__main__':
     test.getWorldTempratureArray()
     test.getWorldCurrentTemprature()
     test.chanceOfRain()
+
+    test.step()
