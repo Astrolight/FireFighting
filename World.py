@@ -58,6 +58,13 @@ class World(object):
 
         return TempratureArray
         
+    def setWorldTempratureArray(self, newTempratures):
+        xSize = self.worldSize[0]
+        ySize = self.worldSize[1]
+
+        for x, y in np.ndindex((xSize,ySize)):
+            self.world[x][y].temprature = newTempratures[x][y]
+
     def getWorldCurrentTemprature(self):
         '''
         Calculates the world base temprature for a perticular day/time
@@ -112,6 +119,7 @@ class World(object):
         self.simTime += self.deltaTime
 
         newTempratures = self.calculateTempratureChanges()
+        self.setWorldTempratureArray(newTempratures)
 
         pass
 
