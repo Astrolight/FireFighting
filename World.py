@@ -45,7 +45,7 @@ class World(object):
         self.worldTemp = 25
 
         # Creates a 2d list/array of TreeCell objects
-        self.world = [TreeCell[x,y](self.worldTemp) for x in range(size) for y in range(size)]
+        self.world = [[TreeCell(self.worldTemp) for x in range(size)] for y in range(size)]
 
     def getWorldTempratureArray(self):
         TempArray = np.array(self.worldSize)
