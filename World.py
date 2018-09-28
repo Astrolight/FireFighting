@@ -37,13 +37,19 @@ class World(object):
     def __init__(self, size):
         self.simTime = 0
         self.deltaTime = 0.1 # Minutes
+        
+        # Sets the world size
+        self.worldSize = (size, size)
 
         # The inital world temprature in centegrade
         self.worldTemp = 25
 
         # Creates a 2d list/array of TreeCell objects
-        self.world = [TreeCell(self.worldTemp) for x in range(size) for y in range(size)]
+        self.world = [TreeCell[x,y](self.worldTemp) for x in range(size) for y in range(size)]
 
+    def getWorldTempratureArray(self):
+        TempArray = np.array(self.worldSize)
+        
     def getWorldCurrentTemprature(self):
         '''
         Calculates the world base temprature for a perticular day/time
@@ -68,4 +74,4 @@ class World(object):
 if __name__=='__main__':
     test=World(6)
 
-    pass
+    test.getWorldTempratureArray()
