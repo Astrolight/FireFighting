@@ -63,6 +63,7 @@ class World(object):
         # Creates a 2d list/array of TreeCell objects
         self.world = [[TreeCell(self.worldTemp, cellLength**2) for x in range(size)] for y in range(size)]
 
+    #* Functions to deal with temprature
     def getWorldTempratureArray(self):
         '''
         Returns an array of tempratures for each cell
@@ -107,6 +108,25 @@ class World(object):
 
         return minuteResolutionTemp
 
+    def calculateTempratureChanges(self):
+        '''
+        Calculates the change in temprature for each cell using a 2d convolution
+        '''
+        tempratureArray = self.getWorldTempratureArray()
+        currentWorldTemp = self.getWorldCurrentTemprature()
+
+        tempratureWeights = np.array([[  0,0.2,  0],
+                                      [0.2,0.2,0.2],
+                                      [  0,0.2,  0]])
+
+        # Makes sure we dont create energy
+        assert 1 == np.sum(tempratureWeights)
+
+        newTempratures = convolve2d(in1=tempratureArray, in2=tempratureWeights, mode='same', fillvalue=currentWorldTemp)
+
+        return newTempratures
+
+    #* Functions to deal with water
     def chanceOfRain(self):
         '''
         Returns the chance out of 1 for rain to happen on that day
@@ -130,24 +150,7 @@ class World(object):
         for x, y in np.ndindex((xSize,ySize)):
             self.world[x][y].setWaterLevel(newWaterLevels[x][y])
 
-    def calculateTempratureChanges(self):
-        '''
-        Calculates the change in temprature for each cell using a 2d convolution
-        '''
-        tempratureArray = self.getWorldTempratureArray()
-        currentWorldTemp = self.getWorldCurrentTemprature()
-
-        tempratureWeights = np.array([[  0,0.2,  0],
-                                      [0.2,0.2,0.2],
-                                      [  0,0.2,  0]])
-
-        # Makes sure we dont create energy
-        assert 1 == np.sum(tempratureWeights)
-
-        newTempratures = convolve2d(in1=tempratureArray, in2=tempratureWeights, mode='same', fillvalue=currentWorldTemp)
-
-        return newTempratures
-
+    #* Functions to deal with the simulation itself
     def step(self):
         '''
         Steps the simulation by deltaT time.
