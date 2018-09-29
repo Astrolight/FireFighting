@@ -51,6 +51,9 @@ class World(object):
         self.world = [[TreeCell(self.worldTemp) for x in range(size)] for y in range(size)]
 
     def getWorldTempratureArray(self):
+        '''
+        Returns an array of tempratures for each cell
+        '''
         x = self.worldSize[0]
         y = self.worldSize[1]
 
@@ -59,6 +62,9 @@ class World(object):
         return TempratureArray
         
     def setWorldTempratureArray(self, newTempratures):
+        '''
+        Takes a array the same size as the world and sets each cell to the new temprature
+        '''
         xSize = self.worldSize[0]
         ySize = self.worldSize[1]
 
@@ -97,6 +103,9 @@ class World(object):
         return  (8*12)/ 365
 
     def calculateTempratureChanges(self):
+        '''
+        Calculates the change in temprature for each cell using a 2d convolution
+        '''
         tempratureArray = self.getWorldTempratureArray()
         currentWorldTemp = self.getWorldCurrentTemprature()
 
