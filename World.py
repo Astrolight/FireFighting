@@ -16,6 +16,14 @@ class TreeCell(object):
 
         self.cellArea = cellArea
 
+        self.waterLevel = 0 # In mm of water
+
+    def getWaterLevel(self):
+        return self.waterLevel
+
+    def setWaterLevel(self, newWaterLevel):
+        self.waterLevel = newWaterLevel
+
     def step(self, dtime):
         '''
         Simulates the growth of trees
@@ -106,6 +114,21 @@ class World(object):
         # According to NOAA for dayton at least there are 8 days on avg per month with rain
 
         return  (8*12)/ 365
+
+    def getWorldWaterArray(self):
+        x = self.worldSize[0]
+        y = self.worldSize[1]
+
+        WaterArray = [[self.world[x][y].getWaterLevel() for x in range(x)] for y in range(y)]
+
+        return WaterArray
+
+    def setWorldWaterArray(self, newWaterLevels):
+        xSize = self.worldSize[0]
+        ySize = self.worldSize[1]
+
+        for x, y in np.ndindex((xSize,ySize)):
+            self.world[x][y].setWaterLevel(newWaterLevels[x][y])
 
     def calculateTempratureChanges(self):
         '''
