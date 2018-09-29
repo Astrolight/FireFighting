@@ -10,9 +10,11 @@ class TreeCell(object):
 
     AVERAGETREEAGE = 150 # Years
 
-    def __init__(self, init_temp):
+    def __init__(self, init_temp, cellArea):
         self.temprature = init_temp
         self.age = 0 # Minutes
+
+        self.cellArea = cellArea
 
     def step(self, dtime):
         '''
@@ -35,9 +37,12 @@ class World(object):
     ----------
     size: int or sequence of ints
         Defines the size of the simulation in terms of how many subsections there are
+
+    cellLength: float
+        Defines the side length of the tree cells in meters
     '''
 
-    def __init__(self, size):
+    def __init__(self, size, cellLength):
         self.simTime = 0 # Minutes
         self.deltaTime = 0.1 # Minutes
         
@@ -48,7 +53,7 @@ class World(object):
         self.worldTemp = self.getWorldCurrentTemprature()
 
         # Creates a 2d list/array of TreeCell objects
-        self.world = [[TreeCell(self.worldTemp) for x in range(size)] for y in range(size)]
+        self.world = [[TreeCell(self.worldTemp, cellLength**2) for x in range(size)] for y in range(size)]
 
     def getWorldTempratureArray(self):
         '''
@@ -135,7 +140,7 @@ class World(object):
 
 # For debuging purposes
 if __name__=='__main__':
-    test=World(6)
+    test=World(6, 1)
 
     test.getWorldTempratureArray()
     test.getWorldCurrentTemprature()
