@@ -10,8 +10,8 @@ class TreeCell(object):
 
     AVERAGETREEAGE = 150 # Years
 
-    def __init__(self, init_temp, cellArea):
-        self.temprature = init_temp
+    def __init__(self, cellArea):
+        self.temprature = 0 # Diffrence in temp from world
         self.age = 0 # Minutes
 
         self.cellArea = cellArea
@@ -61,7 +61,9 @@ class World(object):
         self.worldTemp = self.getWorldCurrentTemprature()
 
         # Creates a 2d list/array of TreeCell objects
-        self.world = [[TreeCell(self.worldTemp, cellLength**2) for x in range(size)] for y in range(size)]
+        self.world = [[TreeCell(cellLength**2) for x in range(size)] for y in range(size)]
+
+        self.isOnFire = False
 
     #* Functions to deal with temprature
     def getWorldTempratureArray(self):
@@ -113,16 +115,15 @@ class World(object):
         Calculates the change in temprature for each cell using a 2d convolution
         '''
         tempratureArray = self.getWorldTempratureArray()
-        currentWorldTemp = self.getWorldCurrentTemprature()
 
-        tempratureWeights = np.array([[  0,0.2,  0],
-                                      [0.2,0.2,0.2],
-                                      [  0,0.2,  0]])
+        tempratureWeights = np.array([[0.05,0.05,0.05],
+                                      [0.05,0.6,0.05],
+                                      [0.05,0.05,0.05]])
 
         # Makes sure we dont create energy
         assert 1 == np.sum(tempratureWeights)
 
-        newTempratures = convolve2d(in1=tempratureArray, in2=tempratureWeights, mode='same', fillvalue=currentWorldTemp)
+        newTempratures = convolve2d(in1=tempratureArray, in2=tempratureWeights, mode='same')
 
         return newTempratures
 
@@ -158,8 +159,10 @@ class World(object):
         '''
         self.simTime += self.deltaTime
 
-        newTempratures = self.calculateTempratureChanges()
-        self.setWorldTempratureArray(newTempratures)
+        # Temprature only changes when on fire
+        if self.isOnFire:
+            newTempratures = self.calculateTempratureChanges()
+            self.setWorldTempratureArray(newTempratures)
 
         pass
 
