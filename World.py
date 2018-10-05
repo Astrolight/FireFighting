@@ -1,7 +1,7 @@
 import numpy as np
 
 from scipy.signal import convolve2d
-from scipy.constants import convert_temperature, pi
+from scipy.constants import convert_temperature, pi, R as Ideal_Gas_Constant
 
 class TreeCell(object):
     '''
@@ -14,15 +14,32 @@ class TreeCell(object):
         self.temprature = 0 # Diffrence in temp from world
         self.age = 0 # Minutes
 
+        self.biomassAmmount = 0 # In kg
+
         self.cellArea = cellArea
 
         self.waterLevel = 0 # In mm of water
 
     def getWaterLevel(self):
+        '''
+        Returns the water level for the cell in mm
+        '''
         return self.waterLevel
 
     def setWaterLevel(self, newWaterLevel):
+        '''
+        Sets the water level for a cell
+        '''
         self.waterLevel = newWaterLevel
+
+    def deltaChangeWaterLevel(self, additionWater):
+        '''
+        Changes the ammount of water in the cell in mm
+        '''
+        self.waterLevel += additionWater
+
+    def growBiomass(self, additionalBiomass):
+        pass
 
     def step(self, dtime):
         '''

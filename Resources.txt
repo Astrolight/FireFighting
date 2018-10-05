@@ -1,0 +1,7 @@
+# For ammount of water needed for trees
+http://waterfootprint.org/media/downloads/VanOel-Hoekstra-2012-WaterFootprintPaper_1.pdf
+
+# Ammount of water evaporated eqn
+(mass loss rate)/(unit area) = (vapor pressure - ambient partial pressure)*sqrt( (molecular weight)/(2*pi*R*T) )
+vapor pressure is proportional to exp(-latent heat/RT)
+https://van.physics.illinois.edu/qa/listing.php?id=1440
