@@ -63,7 +63,7 @@ class World(object):
         # Creates a 2d list/array of TreeCell objects
         self.world = [[TreeCell(cellLength**2) for x in range(size)] for y in range(size)]
 
-        self.isOnFire = False
+        self.isOnFire = True #!: Make sure you change this back to default later!
 
     #* Functions to deal with temprature
     def getWorldTempratureArray(self):
@@ -117,7 +117,7 @@ class World(object):
         tempratureArray = self.getWorldTempratureArray()
 
         tempratureWeights = np.array([[0.05,0.05,0.05],
-                                      [0.05,0.6,0.05],
+                                      [0.05,0.6 ,0.05],
                                       [0.05,0.05,0.05]])
 
         # Makes sure we dont create energy
@@ -172,7 +172,7 @@ if __name__=='__main__':
     test=World(6, 1)
 
     test.getWorldTempratureArray()
-    test.getWorldCurrentTemprature()
+    a1 = test.getWorldCurrentTemprature()
     test.chanceOfRain()
 
     test.step()
