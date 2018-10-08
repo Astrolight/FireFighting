@@ -3,56 +3,6 @@ import numpy as np
 from scipy.signal import convolve2d
 from scipy.constants import convert_temperature, pi, R as Ideal_Gas_Constant
 
-class TreeCell(object):
-    '''
-    Class to store the data and functions to act on the data of a single cell
-    '''
-
-    AVERAGETREEAGE = 150 # Years
-
-    def __init__(self, cellArea):
-        self.temprature = 0 # Diffrence in temp from world
-        self.age = 0 # Minutes
-
-        self.biomassAmmount = 0 # In kg
-
-        self.cellArea = cellArea
-
-        self.waterLevel = 0 # In mm of water
-
-    def getWaterLevel(self):
-        '''
-        Returns the water level for the cell in mm
-        '''
-        return self.waterLevel
-
-    def setWaterLevel(self, newWaterLevel):
-        '''
-        Sets the water level for a cell
-        '''
-        self.waterLevel = newWaterLevel
-
-    def deltaChangeWaterLevel(self, additionWater):
-        '''
-        Changes the ammount of water in the cell in mm
-        '''
-        self.waterLevel += additionWater
-
-    def growBiomass(self, additionalBiomass):
-        pass
-
-    def step(self, dtime):
-        '''
-        Simulates the growth of trees
-
-        Parameters
-        ----------
-        dtime: float
-            The ammount of time in minutes to step the simulation
-        '''
-        self.age += dtime
-
-        raise NotImplementedError
 
 class World(object):
     '''
@@ -77,8 +27,13 @@ class World(object):
         # The inital world temprature in centegrade
         self.worldTemp = self.getWorldCurrentTemprature()
 
+        # Calculates the area in square meters for each cell 
+        self.cellArea = cellLength**2
+
         # Creates a 2d list/array of TreeCell objects
-        self.world = [[TreeCell(cellLength**2) for x in range(size)] for y in range(size)]
+        self.world = {'WaterLevel': np.zeros(self.worldSize),
+                      'BiomassAmount': np.zeros(self.worldSize),
+                      'DiffTemprature': np.zeros(self.worldSize)}
 
         self.isOnFire = True #!: Make sure you change this back to default later!
 
@@ -87,22 +42,13 @@ class World(object):
         '''
         Returns an array of tempratures for each cell
         '''
-        x = self.worldSize[0]
-        y = self.worldSize[1]
-
-        TempratureArray = [[self.world[x][y].temprature for x in range(x)] for y in range(y)]
-
-        return TempratureArray
+        return self.world['DiffTemprature']
         
     def setWorldTempratureArray(self, newTempratures):
         '''
         Takes a array the same size as the world and sets each cell to the new temprature
         '''
-        xSize = self.worldSize[0]
-        ySize = self.worldSize[1]
-
-        for x, y in np.ndindex((xSize,ySize)):
-            self.world[x][y].temprature = newTempratures[x][y]
+        self.world['DiffTemprature'] = newTempratures
 
     def getWorldCurrentTemprature(self):
         '''
@@ -154,19 +100,10 @@ class World(object):
         return  (8*12)/ 365
 
     def getWorldWaterArray(self):
-        x = self.worldSize[0]
-        y = self.worldSize[1]
-
-        WaterArray = [[self.world[x][y].getWaterLevel() for x in range(x)] for y in range(y)]
-
-        return WaterArray
+        return self.world['WaterLevel']
 
     def setWorldWaterArray(self, newWaterLevels):
-        xSize = self.worldSize[0]
-        ySize = self.worldSize[1]
-
-        for x, y in np.ndindex((xSize,ySize)):
-            self.world[x][y].setWaterLevel(newWaterLevels[x][y])
+        self.world['WaterLevel'] = newWaterLevels
 
     #* Functions to deal with the simulation itself
     def step(self):
