@@ -1,6 +1,8 @@
 from scipy.signal import convolve2d
 import numpy as np
 
+from scipy.constants import pi as PI
+
 def calculateTempratureChanges(init_temprature_Array):
         '''
         Calculates the change in temprature for each cell using a 2d convolution
@@ -18,6 +20,7 @@ def getWorldTemprature(current_time):
         '''
         Calculates the world base temprature for a perticular day/time
         '''
+
         # Simplistic modeling of temprature
         JanHigh = 2
         JanLow = -6
@@ -31,8 +34,8 @@ def getWorldTemprature(current_time):
 
         dayNumberinYear = current_time/24
 
-        dayResolutionTemp = (JulAvg - JanAvg)/2 * np.sin(2*pi * dayNumberinYear/365 - pi/2) + YearAvg
+        dayResolutionTemp = (JulAvg - JanAvg)/2 * np.sin(2*PI * dayNumberinYear/365 - PI/2) + YearAvg
 
-        minuteResolutionTemp = (JanHigh - JanLow)*np.sin(self.simTime % (60*24) - pi/2) + dayResolutionTemp
+        minuteResolutionTemp = (JanHigh - JanLow)*np.sin(current_time % (24) - PI/2) + dayResolutionTemp
 
         return minuteResolutionTemp
