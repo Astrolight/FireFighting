@@ -19,3 +19,6 @@ def test_lossOfEnergy():
     ending_energy = np.sum(newTemp)
 
     assert ending_energy <= starting_energy
+
+def test_tempratureCyclic():
+    np.testing.assert_almost_equal(temprature.getWorldTemprature(0), temprature.getWorldTemprature(24*365))
