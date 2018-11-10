@@ -18,22 +18,20 @@ def growUp(biomass_ammount, age, dage):
     '''
 
     #! All of these values are completly arbratary and need to be adjusted
+    #! For now, biomass_ammount is not being used for reasons of simplisity
     # The ideal mass of an adult tree
-    #OPTIMUM_TREE_MASS = 14385 # Or 14.385 tonns
+    OPTIMUM_TREE_MASS = 14385  # Or 14.385 tonns
+    TREELIFETIME = 120*365*24  # AKA 120 years
 
-    natralArbratray = 7
+    if age < TREELIFETIME:
+        # Linear line bettwen age=0,biomass=0 to age=TREELIFETIME, biomass=OPTIMUM_TREE_MASS
+        newBiomass = 0.0136834094368 * age
 
-    # Grows slowly, then quickly, then tapers out
-    natral_Growth = biomass_ammount - (biomass_ammount/natralArbratray)**1.1
-    
-    # Thatway the growth is independent of the times the function is called per unit time
-    natral_Growth = natral_Growth * dage
+    elif TREELIFETIME < age:
+        newBiomass = -0.082100456621 * age + 100688  # Rots completely in 20 years
 
-    # Biomass lost at a spicific age 
-    arbratray_value = 12.1
-    age_growth = (age / arbratray_value)**1.1
+    else:
+        raise Exception(
+            'Error in growUp, Age: {}, TREELIFETIME: {}'.format(age, TREELIFETIME))
 
-    #! Lets see how this goes
-    # Final arb value
-    finalArbValue = 7/1E8
-    return finalArbValue * max(natral_Growth - age_growth, 0)
+    return newBiomass
