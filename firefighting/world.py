@@ -31,7 +31,8 @@ class World(object):
         # Creates a 2d list/array of TreeCell objects
         self.world = {'WaterLevel': np.zeros(self.worldSize),
                       'BiomassAmount': np.zeros(self.worldSize),
-                      'DiffTemprature': np.zeros(self.worldSize)}
+                      'DiffTemprature': np.zeros(self.worldSize),
+                      'treeAge': np.zeros(self.worldSize)}
 
         self.isOnFire = True #!: Make sure you change this back to default later!
 
