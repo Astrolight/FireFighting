@@ -1,6 +1,6 @@
 import numpy as np
 
-from .simulation import temprature
+from .simulation import temprature, biomass
 
 class World(object):
     '''
@@ -62,6 +62,13 @@ class World(object):
         Simulates tree growth and other requeired processes. 
         '''
         self.simTime += self.deltaTime
+
+        # Updates tree age
+        self.world['treeAge'][self.world['treeAge'] != 0] += self.deltaTime
+
+        # If the forrest is not currently on fire
+        if not self.isOnFire:
+            biomass.growUp(self.world['BiomassAmount'], self.world['treeAge'], self.deltaTime)
 
         # Temprature only changes when on fire
         if self.isOnFire:
