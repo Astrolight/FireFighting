@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.signal import convolve2d
 
 
 def growUp(biomass_ammount, age, dage):
@@ -35,3 +36,26 @@ def growUp(biomass_ammount, age, dage):
             'Error in growUp, Age: {}, TREELIFETIME: {}'.format(age, TREELIFETIME))
 
     return newBiomass
+
+
+def spread(biomass_ammount):
+    '''
+    Does the spreading of trees to new areas
+
+    Returns a binary array where 1 values are trees spreading
+    '''
+
+    # Gets the size of the world
+    world_shape = biomass_ammount.shape
+
+    # 1% change every day to spread
+    spread_chance = np.array([[0.01,0.01,0.01],
+                              [0.01,0.00,0.01],
+                              [0.01,0.01,0.01]])
+
+    binary_biomass = biomass_ammount != 0
+
+    conv_array = convolve2d(binary_biomass, spread_chance, mode='same')
+
+    # 1% chance of spreading from single ajacent cell
+    spread_rand_binary_matrix = conv_array < np.random.random_sample(world_shape)
