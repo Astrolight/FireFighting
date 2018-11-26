@@ -66,9 +66,12 @@ class World(object):
         # Updates tree age
         self.world['treeAge'][self.world['treeAge'] != 0] += self.deltaTime
 
-        # If the forrest is not currently on fire
-        if not self.isOnFire:
-            self.world['BiomassAmount'] = biomass.growUp(self.world['BiomassAmount'], self.world['treeAge'], self.deltaTime)
+        # If the forrest is not currently on fire and once per day
+        if self.simTime % 24 == 0 and not self.isOnFire:
+            self.world['BiomassAmount'] = biomass.growUp(self.world['BiomassAmount'], self.world['treeAge'], 24 * self.deltaTime)
+
+            biomass_spread = biomass.spread(self.world['BiomassAmount'])
+            self.world['treeAge'][biomass_spread] += 1
 
         # Temprature only changes when on fire
         if self.isOnFire:
