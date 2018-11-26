@@ -59,3 +59,5 @@ def spread(biomass_ammount):
 
     # 1% chance of spreading from single ajacent cell
     spread_rand_binary_matrix = conv_array < np.random.random_sample(world_shape)
+
+    return spread_rand_binary_matrix
