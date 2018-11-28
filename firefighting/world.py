@@ -36,6 +36,17 @@ class World(object):
 
         self.isOnFire = True #!: Make sure you change this back to default later!
 
+    def initRandomBiomass(self):
+        '''
+        Generates a random ammount of biomass and age
+        '''
+
+        randomAges = 120*365*24*np.random.random_sample(self.worldSize)
+
+        randomBiomass = 14385*np.random.random_sample(self.worldSize)
+
+        self.world['BiomassAmount'] = biomass.growUp(randomBiomass, randomAges, 24 * self.deltaTime)
+
     #* Functions to deal with temprature
     def getWorldTempratureArray(self):
         '''
