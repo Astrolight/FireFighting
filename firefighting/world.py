@@ -17,7 +17,7 @@ class World(object):
 
     def __init__(self, size, cellLength):
         self.simTime = 0 # Hours
-        self.deltaTime = 0.1 # Hours
+        self.deltaTime = 1 # Hours
         
         # Sets the world size
         self.worldSize = (size, size)
