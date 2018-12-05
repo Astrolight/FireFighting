@@ -8,10 +8,12 @@ def test_spontaneousGrowth():
     '''
     Tests to make sure a tree cant just spontainusly grow from nothing
     '''
+    
     age = 0
     dt = 1
 
     assert biomass.growUp(0, age, dt) == 0
+
 
 def test_adultBiomass():
     '''
@@ -22,6 +24,7 @@ def test_adultBiomass():
     dt = 1
 
     assert 14380 <= biomass.growUp(1, adultAge, dt) <= 14385
+
 
 def test_treeDeath():
     '''
