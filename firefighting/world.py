@@ -32,7 +32,7 @@ class World(object):
                       'DiffTemprature': np.zeros(self.worldSize),
                       'treeAge': np.zeros(self.worldSize)}
 
-        self.isOnFire = True  # !: Make sure you change this back to default later!
+        self.isOnFire = False
 
     def initRandomBiomass(self):
         '''
