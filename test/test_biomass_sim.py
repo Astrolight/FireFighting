@@ -8,30 +8,30 @@ def test_spontaneousGrowth():
     '''
     Tests to make sure a tree cant just spontainusly grow from nothing
     '''
-    
-    age = 0
+    currentBiomass = np.zeros((1,1))
+    age = np.zeros((1,1))
     dt = 1
 
-    assert biomass.growUp(0, age, dt) == 0
+    assert biomass.growUp(currentBiomass, age, dt) == 0
 
 
 def test_adultBiomass():
     '''
     Tests to make sure that the tree has a specific biomass at its adult age
     '''
-
-    adultAge = 120*365*24
+    currentBiomass = 14385 * np.ones((1,1))
+    adultAge = 120*365*24 * np.ones((1,1))
     dt = 1
 
-    assert 14380 <= biomass.growUp(1, adultAge, dt) <= 14385
+    assert 14380 <= biomass.growUp(currentBiomass, adultAge, dt) <= 14385
 
 
 def test_treeDeath():
     '''
     Makes sure tree at end of life is completely gone
     '''
-
-    deathAge = 120*365*24 + 20*365*24
+    currentBiomass = np.ones((1,1))
+    deathAge = (120*365*24 + 20*365*24) * np.ones((1,1))
     dt = 1
 
-    np.testing.assert_almost_equal(biomass.growUp(1, deathAge, dt), 0)
+    np.testing.assert_almost_equal(biomass.growUp(currentBiomass, deathAge, dt), 0)
