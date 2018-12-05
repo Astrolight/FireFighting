@@ -70,7 +70,6 @@ class World(object):
 
     def getInfo(self):
         '''
-
         Returns
         -------
         dict that contains information on the current state of the simulation
