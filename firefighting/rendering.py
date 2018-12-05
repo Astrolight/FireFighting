@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def generateHeatmap(dataArray, minValue=0, maxValue=1):
+def generateHeatmap(dataArray, minValue=0, maxValue=1, colorMap='inferno'):
     '''
     Takes in a numpy array and generates a heatmap
 
@@ -18,4 +18,8 @@ def generateHeatmap(dataArray, minValue=0, maxValue=1):
     -------
     figure object
     '''
-    raise NotImplementedError()
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(dataArray, vmin=minValue, vmax=maxValue, cmap=colorMap)
+
+    return fig
