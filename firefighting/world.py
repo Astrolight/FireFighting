@@ -16,7 +16,7 @@ class World(object):
         Defines the side length of the tree cells in meters
     '''
 
-    def __init__(self, size, cellLength):
+    def __init__(self, size):
         self.simTime = 0  # Hours
         self.deltaTime = 1  # Hours
 
@@ -25,9 +25,6 @@ class World(object):
 
         # The inital world temprature in centegrade
         self.worldTemp = temprature.getWorldTemprature(self.simTime)
-
-        # Calculates the area in square meters for each cell
-        self.cellArea = cellLength**2
 
         # Creates a 2d list/array of TreeCell objects
         self.world = {'WaterLevel': np.zeros(self.worldSize),
