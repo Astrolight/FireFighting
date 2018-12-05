@@ -66,6 +66,23 @@ class World(object):
     def setWorldWaterArray(self, newWaterLevels):
         self.world['WaterLevel'] = newWaterLevels
 
+    def getInfo(self):
+        '''
+
+        Returns
+        -------
+        dict that contains information on the current state of the simulation
+        '''
+
+        Info = {
+            'simTime': self.simTime,
+            'worldSize': self.worldSize,
+            'worldTemp': self.worldTemp,
+            'worldData': self.world
+        }
+
+        return Info
+
     #* Functions to deal with the simulation itself
     def step(self):
         '''
