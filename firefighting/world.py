@@ -2,6 +2,7 @@ import numpy as np
 
 from .simulation import temprature, biomass
 
+
 class World(object):
     '''
     Class to store the information of and control the simulation of a forest fire.
@@ -15,18 +16,15 @@ class World(object):
         Defines the side length of the tree cells in meters
     '''
 
-    def __init__(self, size, cellLength):
-        self.simTime = 0 # Hours
-        self.deltaTime = 0.1 # Hours
-        
+    def __init__(self, size):
+        self.simTime = 0  # Hours
+        self.deltaTime = 1  # Hours
+
         # Sets the world size
         self.worldSize = (size, size)
 
         # The inital world temprature in centegrade
         self.worldTemp = temprature.getWorldTemprature(self.simTime)
-
-        # Calculates the area in square meters for each cell 
-        self.cellArea = cellLength**2
 
         # Creates a 2d list/array of TreeCell objects
         self.world = {'WaterLevel': np.zeros(self.worldSize),
@@ -34,7 +32,7 @@ class World(object):
                       'DiffTemprature': np.zeros(self.worldSize),
                       'treeAge': np.zeros(self.worldSize)}
 
-        self.isOnFire = True #!: Make sure you change this back to default later!
+        self.isOnFire = False
 
     def initRandomBiomass(self):
         '''
@@ -45,15 +43,16 @@ class World(object):
 
         randomBiomass = 14385*np.random.random_sample(self.worldSize)
 
-        self.world['BiomassAmount'] = biomass.growUp(randomBiomass, randomAges, 24 * self.deltaTime)
+        self.world['BiomassAmount'] = biomass.growUp(
+            randomBiomass, randomAges, 24 * self.deltaTime)
 
-    #* Functions to deal with temprature
+    # * Functions to deal with temprature
     def getWorldTempratureArray(self):
         '''
         Returns an array of tempratures for each cell
         '''
         return self.world['DiffTemprature']
-        
+
     def setWorldTempratureArray(self, newTempratures):
         '''
         Takes a array the same size as the world and sets each cell to the new temprature
@@ -66,7 +65,23 @@ class World(object):
     def setWorldWaterArray(self, newWaterLevels):
         self.world['WaterLevel'] = newWaterLevels
 
-    #* Functions to deal with the simulation itself
+    def getInfo(self):
+        '''
+        Returns
+        -------
+        dict that contains information on the current state of the simulation
+        '''
+
+        Info = {
+            'simTime': self.simTime,
+            'worldSize': self.worldSize,
+            'worldTemp': self.worldTemp,
+            'worldData': self.world
+        }
+
+        return Info
+
+    # * Functions to deal with the simulation itself
     def step(self):
         '''
         Steps the simulation by deltaT time.
@@ -79,7 +94,8 @@ class World(object):
 
         # If the forrest is not currently on fire and once per day
         if self.simTime % 24 == 0 and not self.isOnFire:
-            self.world['BiomassAmount'] = biomass.growUp(self.world['BiomassAmount'], self.world['treeAge'], 24 * self.deltaTime)
+            self.world['BiomassAmount'] = biomass.growUp(
+                self.world['BiomassAmount'], self.world['treeAge'], 24 * self.deltaTime)
 
             biomass_spread = biomass.spread(self.world['BiomassAmount'])
             self.world['treeAge'][biomass_spread] += 1

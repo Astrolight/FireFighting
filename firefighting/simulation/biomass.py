@@ -8,10 +8,10 @@ def growUp(biomass_ammount, age, dage):
 
     Parameters
     ----------
-    biomass_ammount: float
+    biomass_ammount: matrix of float
         Defines the ammount of biomass that is being dealt with
 
-    age: integer
+    age: matrix of integer
         Defines the age of the tree in hours
 
     dage: float
@@ -24,16 +24,12 @@ def growUp(biomass_ammount, age, dage):
     OPTIMUM_TREE_MASS = 14385  # Or 14.385 tonns
     TREELIFETIME = 120*365*24  # AKA 120 years
 
-    if age <= TREELIFETIME:
-        # Linear line bettwen age=0,biomass=0 to age=TREELIFETIME, biomass=OPTIMUM_TREE_MASS
-        newBiomass = 0.0136834094368 * age
+    newBiomass = np.zeros(biomass_ammount.shape)
 
-    elif TREELIFETIME < age:
-        newBiomass = -0.082100456621 * age + 100688  # Rots completely in 20 years
+    newBiomass[age <= TREELIFETIME] =  0.0136834094368 * age[age <= TREELIFETIME]
+    # Linear line bettwen age=0,biomass=0 to age=TREELIFETIME, biomass=OPTIMUM_TREE_MASS
 
-    else:
-        raise Exception(
-            'Error in growUp, Age: {}, TREELIFETIME: {}'.format(age, TREELIFETIME))
+    newBiomass[TREELIFETIME < age] = -0.082100456621 * age[TREELIFETIME < age] + 100688
 
     return newBiomass
 
@@ -49,15 +45,16 @@ def spread(biomass_ammount):
     world_shape = biomass_ammount.shape
 
     # 1% change every day to spread
-    spread_chance = np.array([[0.01,0.01,0.01],
-                              [0.01,0.00,0.01],
-                              [0.01,0.01,0.01]])
+    spread_chance = np.array([[0.01, 0.01, 0.01],
+                              [0.01, 0.00, 0.01],
+                              [0.01, 0.01, 0.01]])
 
     binary_biomass = biomass_ammount != 0
 
     conv_array = convolve2d(binary_biomass, spread_chance, mode='same')
 
     # 1% chance of spreading from single ajacent cell
-    spread_rand_binary_matrix = conv_array < np.random.random_sample(world_shape)
+    spread_rand_binary_matrix = conv_array > np.random.random_sample(
+        world_shape)
 
     return spread_rand_binary_matrix

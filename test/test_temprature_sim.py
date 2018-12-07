@@ -2,6 +2,7 @@ from firefighting.simulation import temprature
 
 import numpy as np
 
+
 def test_zeroTemprature():
     zeroArray = np.zeros((128, 128))
 
@@ -9,8 +10,9 @@ def test_zeroTemprature():
 
     np.testing.assert_equal(zeroArray, newTemp)
 
+
 def test_lossOfEnergy():
-    random_array = np.random.rand(128,128)
+    random_array = np.random.rand(128, 128)
 
     starting_energy = np.sum(random_array)
 
@@ -20,5 +22,7 @@ def test_lossOfEnergy():
 
     assert ending_energy <= starting_energy
 
+
 def test_tempratureCyclic():
-    np.testing.assert_almost_equal(temprature.getWorldTemprature(0), temprature.getWorldTemprature(24*365))
+    np.testing.assert_almost_equal(temprature.getWorldTemprature(
+        0), temprature.getWorldTemprature(24*365))
