@@ -69,7 +69,8 @@ class World(object):
         '''
         Returns
         -------
-        dict that contains information on the current state of the simulation
+        out: dict
+            Contains information on the current state of the simulation
         '''
 
         Info = {
