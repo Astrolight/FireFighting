@@ -43,6 +43,8 @@ class World(object):
 
         randomBiomass = 14385*np.random.random_sample(self.worldSize)
 
+        self.world['treeAge'] = randomAges
+
         self.world['BiomassAmount'] = biomass.growUp(
             randomBiomass, randomAges, 24 * self.deltaTime)
 
