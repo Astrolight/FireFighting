@@ -87,7 +87,7 @@ class World(object):
     def step(self):
         '''
         Steps the simulation by deltaT time.
-        Simulates tree growth and other requeired processes. 
+        Simulates tree growth and other required processes. 
         '''
         self.simTime += self.deltaTime
 
