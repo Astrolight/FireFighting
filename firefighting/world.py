@@ -2,6 +2,7 @@ import numpy as np
 
 from .simulation import temprature, biomass
 
+import h5py
 
 class World(object):
     '''
@@ -107,3 +108,21 @@ class World(object):
         if self.isOnFire:
             newTempratures = temprature.getWorldTemprature(self.simTime)
             self.setWorldTempratureArray(newTempratures)
+
+    def saveState(self, Filename, append=True):
+        '''
+        Saves the file in a hdf5 file format
+
+
+        '''
+        if append:
+            file_mode = 'a'
+        else:
+            file_mode = 'w'
+        
+        fp = h5py.File(Filename, mode=file_mode)
+
+
+        return NotImplementedError()
+
+        
