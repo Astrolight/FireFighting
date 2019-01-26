@@ -3,6 +3,7 @@ import numpy as np
 from .simulation import temprature, biomass
 
 import h5py
+import time
 
 class World(object):
     '''
@@ -15,9 +16,13 @@ class World(object):
 
     cellLength: float
         Defines the side length of the tree cells in meters
+
+    save_file_name: string
+        Defines the hdf5 file name to be used when saving the simulation state
+        If 'Default', the current iso time will be used
     '''
 
-    def __init__(self, size):
+    def __init__(self, size, save_file_name='Default'):
         self.simTime = 0  # Hours
         self.deltaTime = 1  # Hours
 
@@ -34,6 +39,13 @@ class World(object):
                       'treeAge': np.zeros(self.worldSize)}
 
         self.isOnFire = False
+
+        if save_file_name=='Default':
+            # Returns the current time in ISO 8601 UTC Format (yyyyMMddTHHmmssZ)
+            # yyyy=year, MM=month, dd=day, HH=hour (24H), mm=minute, ss=second, Z means UTC (Zero offset)
+            self.save_file_name = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
+        else:
+            self.save_file_name = save_file_name
 
     def initRandomBiomass(self):
         '''
@@ -109,18 +121,16 @@ class World(object):
             newTempratures = temprature.getWorldTemprature(self.simTime)
             self.setWorldTempratureArray(newTempratures)
 
-    def saveState(self, Filename, append=True):
+    def saveState(self, append=True):
         '''
         Saves the file in a hdf5 file format
-
-
         '''
         if append:
             file_mode = 'a'
         else:
             file_mode = 'w'
         
-        fp = h5py.File(Filename, mode=file_mode)
+        fp = h5py.File(self.save_file_name, mode=file_mode)
 
 
         return NotImplementedError()
