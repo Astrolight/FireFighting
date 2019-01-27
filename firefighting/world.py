@@ -4,6 +4,7 @@ from .simulation import temprature, biomass
 
 import h5py
 import time
+import os.path
 
 class World(object):
     '''
@@ -121,6 +122,9 @@ class World(object):
             newTempratures = temprature.getWorldTemprature(self.simTime)
             self.setWorldTempratureArray(newTempratures)
 
+    def __create_h5__(self):
+        yield NotImplementedError()
+
     def saveState(self, append=True):
         '''
         Saves the file in a hdf5 file format
@@ -130,9 +134,12 @@ class World(object):
         else:
             file_mode = 'w'
         
+        # Checks if h5 file already exists and if not creates it
+        if not os.path.isfile(self.save_file_name):
+            self.__create_h5__()
+
         fp = h5py.File(self.save_file_name, mode=file_mode)
 
+        fp.
 
-        return NotImplementedError()
-
-        
+        yield NotImplementedError()
