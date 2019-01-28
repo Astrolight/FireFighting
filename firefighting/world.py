@@ -50,6 +50,7 @@ class World(object):
             self.save_file_name = save_file_name
 
         self.fp = None
+        self.fp_world_data = []
         self.__create_h5__()
 
     def initRandomBiomass(self):
