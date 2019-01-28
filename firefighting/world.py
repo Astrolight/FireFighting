@@ -41,12 +41,16 @@ class World(object):
 
         self.isOnFire = False
 
+        # Stuff for creating h5 file
         if save_file_name=='Default':
             # Returns the current time in ISO 8601 UTC Format (yyyyMMddTHHmmssZ)
             # yyyy=year, MM=month, dd=day, HH=hour (24H), mm=minute, ss=second, Z means UTC (Zero offset)
             self.save_file_name = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
         else:
             self.save_file_name = save_file_name
+
+        self.fp = None
+        self.__create_h5__()
 
     def initRandomBiomass(self):
         '''
@@ -123,7 +127,17 @@ class World(object):
             self.setWorldTempratureArray(newTempratures)
 
     def __create_h5__(self):
-        yield NotImplementedError()
+        '''
+        Creates new h5 file if it does not exist
+        '''
+        if not os.path.isfile(self.save_file_name):
+            self.fp = h5py.File(self.save_file_name, mode='a')
+        else:
+            raise FileExistsError('File named {} already Exists'.format(self.save_file_name))
+
+
+        self.fp_world = self.fp.create_group('world_data')
+        
 
     def saveState(self, append=True):
         '''
