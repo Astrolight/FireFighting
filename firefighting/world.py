@@ -45,12 +45,12 @@ class World(object):
         if save_file_name=='Default':
             # Returns the current time in ISO 8601 UTC Format (yyyyMMddTHHmmssZ)
             # yyyy=year, MM=month, dd=day, HH=hour (24H), mm=minute, ss=second, Z means UTC (Zero offset)
-            self.save_file_name = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
+            self.save_file_name = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())+'.h5'
         else:
             self.save_file_name = save_file_name
 
         self.fp = None
-        self.fp_world_data = []
+        self.fp_world_data = {}
         self.__create_h5__()
 
     def initRandomBiomass(self):
@@ -143,11 +143,9 @@ class World(object):
         
         self.fp_world = self.fp.create_group('world_data')
 
-        world_dim = (self.worldSize[0], self.worldSize[0], )
-
         datasets = ['WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge']
         for dataset in datasets:
-            self.fp_world_data[dataset] = self.fp_world.create_dataset(dataset, dtype='float', shape=world_dim, maxshape=(self.worldSize[0], self.worldSize[0], None), chunks=(self.worldSize[0], self.worldSize[0], ))
+            self.fp_world_data[dataset] = self.fp_world.create_dataset(dataset, dtype='float', shape=(self.worldSize[0], self.worldSize[0], 1), maxshape=(self.worldSize[0], self.worldSize[0], None), chunks=(self.worldSize[0], self.worldSize[0], 1))
 
     def saveState(self):
         '''
@@ -169,4 +167,22 @@ class World(object):
             for dataset in datasets:
                 self.fp_world_data[dataset] = self.fp_world[dataset]
 
-        raise NotImplementedError()
+        world_info = self.getInfo()
+
+        file_pointers_1D= [self.fp_simTime, self.fp_onFire, self.fp_globalTemp]
+        file_pointers_1D_Name = ['simTime', 'onFire', 'globalTemp']
+        for i in range(len(file_pointers_1D)):
+            curr_fp = file_pointers_1D[i]
+            curr_fp_name = file_pointers_1D_Name[i]
+            curr_fp.resize(curr_fp.shape[0]+1, axis=0)
+            curr_fp[-1:] = world_info[curr_fp_name]
+
+        file_pointers_2D = self.fp_world_data
+        file_pointers_2D_keys = list(file_pointers_2D.keys())
+        file_pointers_2D_Name = ['WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge']
+        for i in range(len(file_pointers_2D)):
+            curr_fp = file_pointers_2D[file_pointers_2D_keys[i]]
+            curr_fp_name = file_pointers_2D_Name[i]
+            curr_fp.resize(curr_fp.shape[2]+1, axis=2)
+            curr_fp[:,:,-1:] = np.expand_dims(world_info['worldData'][curr_fp_name], 2)
+

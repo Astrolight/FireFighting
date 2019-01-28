@@ -2,12 +2,13 @@ import firefighting
 
 # Only run if this is the main file being ran
 if __name__ == '__main__':
-    world = firefighting.world.World(1000)
+    world = firefighting.world.World(100)
     world.initRandomBiomass()
 
     # Step by 100 days
     for hour in range(24*100):
         world.step()
+        world.saveState()
         
     world_Data = world.getInfo()['worldData']
 
