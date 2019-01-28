@@ -31,7 +31,7 @@ class World(object):
         self.worldSize = (size, size)
 
         # The inital world temprature in centegrade
-        self.worldTemp = temprature.getWorldTemprature(self.simTime)
+        self.globalTemp = temprature.getWorldTemprature(self.simTime)
 
         # Creates a 2d list/array of TreeCell objects
         self.world = {'WaterLevel': np.zeros(self.worldSize),
@@ -95,8 +95,9 @@ class World(object):
 
         Info = {
             'simTime': self.simTime,
+            'onFire': self.isOnFire,
             'worldSize': self.worldSize,
-            'worldTemp': self.worldTemp,
+            'globalTemp': self.globalTemp,
             'worldData': self.world
         }
 
@@ -135,25 +136,36 @@ class World(object):
         else:
             raise FileExistsError('File named {} already Exists'.format(self.save_file_name))
 
-
-        self.fp_world = self.fp.create_group('world_data')
+        self.fp_simTime = self.fp.create_dataset('simTime', shape=(1,), maxshape=(None,), chunks=(1,), dtype='float')
+        self.fp_onFire = self.fp.create_dataset('onFire', shape=(1,), maxshape=(None,), chunks=(1,), dtype='float')
+        self.fp_globalTemp = self.fp.create_dataset('globalTemp', shape=(1,), maxshape=(None,), chunks=(1,), dtype='float')
         
+        self.fp_world = self.fp.create_group('world_data')
 
-    def saveState(self, append=True):
+        world_dim = (self.worldSize[0], self.worldSize[0], )
+
+        datasets = ['WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge']
+        for dataset in datasets:
+            self.fp_world_data[dataset] = self.fp_world.create_dataset(dataset, dtype='float', shape=world_dim, maxshape=(self.worldSize[0], self.worldSize[0], None), chunks=(self.worldSize[0], self.worldSize[0], ))
+
+    def saveState(self):
         '''
         Saves the file in a hdf5 file format
         '''
-        if append:
-            file_mode = 'a'
-        else:
-            file_mode = 'w'
-        
-        # Checks if h5 file already exists and if not creates it
         if not os.path.isfile(self.save_file_name):
-            self.__create_h5__()
+            raise FileNotFoundError('h5 does not exist!')
 
-        fp = h5py.File(self.save_file_name, mode=file_mode)
+        # Opens file if it was not already open
+        if self.fp == None:
+            self.fp = h5py.File(self.save_file_name, mode='a')
+            self.fp_world = self.fp['world_data']
 
-        fp.
+            self.fp_simTime = self.fp['simTime']
+            self.fp_onFire = self.fp['onFire']
+            self.fp_globalTemp = self.fp['globalTemp']
 
-        yield NotImplementedError()
+            datasets = ['WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge']
+            for dataset in datasets:
+                self.fp_world_data[dataset] = self.fp_world[dataset]
+
+        raise NotImplementedError()
