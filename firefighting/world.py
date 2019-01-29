@@ -53,6 +53,10 @@ class World(object):
         self.fp_world_data = {}
         self.__create_h5__()
 
+        self.normalInterval = 24
+        self.fireInterval = 3
+
+
     def initRandomBiomass(self):
         '''
         Generates a random ammount of biomass and age
@@ -125,8 +129,19 @@ class World(object):
 
         # Temprature only changes when on fire
         if self.isOnFire:
+            # Saves simulation if on fire during specified interval
+            if self.simTime % self.fireInterval == 0:
+                self.saveState()
+
             newTempratures = temprature.getWorldTemprature(self.simTime)
             self.setWorldTempratureArray(newTempratures)
+        else:
+            # Saves simulation if not on fire during specified interval
+            if self.simTime % self.normalInterval == 0:
+                self.saveState()
+        
+
+    # * Functions to deal with saving of data
 
     def __create_h5__(self):
         '''
@@ -146,6 +161,15 @@ class World(object):
         datasets = ['WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge']
         for dataset in datasets:
             self.fp_world_data[dataset] = self.fp_world.create_dataset(dataset, dtype='float', shape=(self.worldSize[0], self.worldSize[0], 1), maxshape=(self.worldSize[0], self.worldSize[0], None), chunks=(self.worldSize[0], self.worldSize[0], 1))
+
+    def autoSaveState(self, normalInterval = 24, fireInterval = 3):
+        '''
+        Autosaves data to the h5 file every x timesteps.
+
+        Default is to save every simulation day and every 3 steps during a fire
+        '''
+        self.normalInterval = normalInterval
+        self.fireInterval = fireInterval
 
     def saveState(self):
         '''
