@@ -153,12 +153,9 @@ class World(object):
             raise FileExistsError(
                 'File named {} already Exists'.format(self.save_file_name))
 
-        self.fp_simTime = self.fp.create_dataset('simTime', shape=(
-            1,), maxshape=(None,), chunks=(1,), dtype='float')
-        self.fp_onFire = self.fp.create_dataset('onFire', shape=(
-            1,), maxshape=(None,), chunks=(1,), dtype='float')
-        self.fp_globalTemp = self.fp.create_dataset(
-            'globalTemp', shape=(1,), maxshape=(None,), chunks=(1,), dtype='float')
+        self.fp_simTime = self.fp.create_dataset('simTime', shape=(1,), maxshape=(None,), chunks=(1,), dtype='int32')
+        self.fp_onFire = self.fp.create_dataset('onFire', shape=(1,), maxshape=(None,), chunks=(1,), dtype='bool8')
+        self.fp_globalTemp = self.fp.create_dataset('globalTemp', shape=(1,), maxshape=(None,), chunks=(1,), dtype='float16')
 
         self.fp_world = self.fp.create_group('world_data')
 
@@ -216,5 +213,4 @@ class World(object):
             curr_fp = file_pointers_2D[file_pointers_2D_keys[i]]
             curr_fp_name = file_pointers_2D_Name[i]
             curr_fp.resize(curr_fp.shape[2]+1, axis=2)
-            curr_fp[:, :, -
-                    1:] = np.expand_dims(world_info['worldData'][curr_fp_name], 2)
+            curr_fp[:, :, -1] = world_info['worldData'][curr_fp_name]
