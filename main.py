@@ -8,7 +8,6 @@ if __name__ == '__main__':
     # Step by 100 days
     for hour in range(24*100):
         world.step()
-        world.saveState()
         
     world_Data = world.getInfo()['worldData']
 
