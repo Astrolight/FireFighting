@@ -130,7 +130,7 @@ class World(object):
             self.setWorldTempratureArray(newTempratures)
         else:
             # If the forrest is not currently on fire and once per day
-            if self.simTime % 24 == 0 and not self.isOnFire:
+            if self.simTime % 24 == 0:
                 self.world['BiomassAmount'] = biomass.growUp(
                     self.world['BiomassAmount'], self.world['treeAge'], 24 * self.deltaTime)
 
