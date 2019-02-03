@@ -162,7 +162,7 @@ class World(object):
 
         datasets = ['WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge', 'hasFire']
         for dataset in datasets:
-            self.fp_world_data[dataset] = self.fp_world.create_dataset(dataset, dtype='float', shape=(self.worldSize[0], self.worldSize[0], 1), maxshape=(
+            self.fp_world_data[dataset] = self.fp_world.create_dataset(dataset, dtype='single', shape=(self.worldSize[0], self.worldSize[0], 1), maxshape=(
                 self.worldSize[0], self.worldSize[0], None), chunks=(self.worldSize[0], self.worldSize[0], 1))
 
     def autoSaveState(self, normalInterval=720, fireInterval=3):
