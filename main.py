@@ -8,7 +8,7 @@ if __name__ == '__main__':
     world.initRandomBiomass()
 
     start_time = time.time()
-    # Step by 100 days
+    # Step by x days
     for hour in range(24*365):
         world.step()
     end_time = time.time()

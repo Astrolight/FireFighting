@@ -38,7 +38,8 @@ class World(object):
         self.world = {'WaterLevel': np.zeros(self.worldSize),
                       'BiomassAmount': np.zeros(self.worldSize),
                       'DiffTemprature': np.zeros(self.worldSize),
-                      'treeAge': np.zeros(self.worldSize)}
+                      'treeAge': np.zeros(self.worldSize),
+                      'hasFire': np.zeros(self.worldSize, dtype='bool')}
 
         self.isOnFire = False
 
@@ -160,16 +161,18 @@ class World(object):
 
         self.fp_world = self.fp.create_group('world_data')
 
-        datasets = ['WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge']
+        datasets = ['WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge', 'hasFire']
         for dataset in datasets:
             self.fp_world_data[dataset] = self.fp_world.create_dataset(dataset, dtype='float', shape=(self.worldSize[0], self.worldSize[0], 1), maxshape=(
                 self.worldSize[0], self.worldSize[0], None), chunks=(self.worldSize[0], self.worldSize[0], 1))
 
-    def autoSaveState(self, normalInterval=24, fireInterval=3):
+    def autoSaveState(self, normalInterval=720, fireInterval=3):
         '''
         Autosaves data to the h5 file every x timesteps.
 
-        Default is to save every simulation day and every 3 steps during a fire
+        Set to 0 to disable auto save
+
+        Default is to save every simulation 30 days and every 3 steps during a fire
         '''
         self.normalInterval = normalInterval
         self.fireInterval = fireInterval
@@ -191,12 +194,13 @@ class World(object):
             self.fp_globalTemp = self.fp['globalTemp']
 
             datasets = ['WaterLevel', 'BiomassAmount',
-                        'DiffTemprature', 'treeAge']
+                        'DiffTemprature', 'treeAge', 'hasFire']
             for dataset in datasets:
                 self.fp_world_data[dataset] = self.fp_world[dataset]
 
         world_info = self.getInfo()
 
+        # Saves the 1d arrays
         file_pointers_1D = [self.fp_simTime,
                             self.fp_onFire, self.fp_globalTemp]
         file_pointers_1D_Name = ['simTime', 'onFire', 'globalTemp']
@@ -206,10 +210,11 @@ class World(object):
             curr_fp.resize(curr_fp.shape[0]+1, axis=0)
             curr_fp[-1:] = world_info[curr_fp_name]
 
+        # Saves the 2d arrays
         file_pointers_2D = self.fp_world_data
         file_pointers_2D_keys = list(file_pointers_2D.keys())
         file_pointers_2D_Name = ['WaterLevel',
-                                 'BiomassAmount', 'DiffTemprature', 'treeAge']
+                                 'BiomassAmount', 'DiffTemprature', 'treeAge', 'hasFire']
         for i in range(len(file_pointers_2D)):
             curr_fp = file_pointers_2D[file_pointers_2D_keys[i]]
             curr_fp_name = file_pointers_2D_Name[i]
