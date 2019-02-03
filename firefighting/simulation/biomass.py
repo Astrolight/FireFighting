@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.signal import convolve2d
+from scipy.ndimage import uniform_filter
 
 
 def growUp(biomass_ammount, age, dage):
@@ -44,14 +44,9 @@ def spread(biomass_ammount):
     # Gets the size of the world
     world_shape = biomass_ammount.shape
 
-    # 1% change every day to spread
-    spread_chance = np.array([[0.01, 0.01, 0.01],
-                              [0.01, 0.00, 0.01],
-                              [0.01, 0.01, 0.01]])
-
     binary_biomass = biomass_ammount != 0
 
-    conv_array = convolve2d(binary_biomass, spread_chance, mode='same')
+    conv_array = 0.01*uniform_filter(binary_biomass, (3,3), mode='constant')
 
     # 1% chance of spreading from single ajacent cell
     spread_rand_binary_matrix = conv_array > np.random.random_sample(

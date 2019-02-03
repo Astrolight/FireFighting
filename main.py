@@ -4,7 +4,7 @@ import time
 # Only run if this is the main file being ran
 if __name__ == '__main__':
 
-    world = firefighting.world.World(500)
+    world = firefighting.world.World(1000)
     world.initRandomBiomass()
 
     start_time = time.time()
