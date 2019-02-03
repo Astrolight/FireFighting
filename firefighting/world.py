@@ -123,7 +123,7 @@ class World(object):
         # Temprature only changes when on fire
         if self.isOnFire:
             # Saves simulation if on fire during specified interval
-            if self.simTime % self.fireInterval == 0:
+            if self.fireInterval != 0 and self.simTime % self.fireInterval == 0:
                 self.saveState()
 
             newTempratures = temprature.getWorldTemprature(self.simTime)
@@ -139,7 +139,7 @@ class World(object):
 
 
             # Saves simulation if not on fire during specified interval
-            if self.simTime % self.normalInterval == 0:
+            if self.normalInterval != 0 and self.simTime % self.normalInterval == 0:
                 self.saveState()
 
     # * Functions to deal with saving of data
