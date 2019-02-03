@@ -56,8 +56,7 @@ class World(object):
         self.fp_world_data = {}
         self.__create_h5__()
 
-        self.normalInterval = 24
-        self.fireInterval = 3
+        self.autoSaveState()
 
     def initRandomBiomass(self):
         '''
