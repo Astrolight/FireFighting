@@ -19,7 +19,3 @@ if __name__ == '__main__':
     world_Data = world.getInfo()['worldData']
 
     bioMass_Ammount = world_Data['BiomassAmount']
-
-    fig = firefighting.rendering.generateHeatmap(bioMass_Ammount, maxValue=14385)
-    
-    #fig.show()
