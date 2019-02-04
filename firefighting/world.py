@@ -114,7 +114,6 @@ class World(object):
         return Info
 
     # * Functions to deal with the simulation itself
-    @profile
     def step(self):
         '''
         Steps the simulation by deltaT time.
