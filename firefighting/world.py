@@ -43,6 +43,10 @@ class World(object):
 
         self.isOnFire = False
 
+        # Veribles to make sure simulation is steped only when needed
+        self.lastSpreadTime = -100
+        self.lastSaveTime = -100
+
         # Stuff for creating h5 file
         if save_file_name == 'Default':
             # Returns the current time in ISO 8601 UTC Format (yyyyMMddTHHmmssZ)
@@ -110,6 +114,7 @@ class World(object):
         return Info
 
     # * Functions to deal with the simulation itself
+    @profile
     def step(self):
         '''
         Steps the simulation by deltaT time.
@@ -137,7 +142,10 @@ class World(object):
             self.deltaTime = 24
 
             # If the forrest is not currently on fire and once per day
-            if self.simTime % 24 == 0:
+            if self.simTime - self.lastSpreadTime >= 24:
+
+                self.lastSpreadTime = self.simTime
+
                 self.world['BiomassAmount'] = biomass.growUp(
                     self.world['BiomassAmount'], self.world['treeAge'], 24 * self.deltaTime)
 
@@ -146,7 +154,9 @@ class World(object):
 
 
             # Saves simulation if not on fire during specified interval
-            if self.normalInterval != 0 and self.simTime % self.normalInterval == 0:
+            if self.normalInterval != 0 and (self.simTime - self.lastSaveTime) > self.normalInterval:
+                self.lastSaveTime = self.simTime
+                
                 self.saveState()
 
     # * Functions to deal with saving of data
