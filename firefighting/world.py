@@ -24,6 +24,8 @@ class World(object):
         If 'Default', the current iso time will be used
     '''
 
+    chunkSize = 16
+
     def __init__(self, size, save_file_name='Default'):
         self.simTime = 0  # Hours
         self.deltaTime = 1  # Hours
@@ -154,16 +156,18 @@ class World(object):
             raise FileExistsError(
                 'File named {} already Exists'.format(self.save_file_name))
 
-        self.fp_simTime = self.fp.create_dataset('simTime', shape=(1,), maxshape=(None,), chunks=(1,), dtype='int32')
-        self.fp_onFire = self.fp.create_dataset('onFire', shape=(1,), maxshape=(None,), chunks=(1,), dtype='bool8')
-        self.fp_globalTemp = self.fp.create_dataset('globalTemp', shape=(1,), maxshape=(None,), chunks=(1,), dtype='float16')
+        self.fp_simTime = self.fp.create_dataset('simTime', shape=(self.chunkSize,), maxshape=(None,), chunks=(self.chunkSize,), dtype='int32')
+        self.fp_onFire = self.fp.create_dataset('onFire', shape=(self.chunkSize,), maxshape=(None,), chunks=(self.chunkSize,), dtype='bool8')
+        self.fp_globalTemp = self.fp.create_dataset('globalTemp', shape=(self.chunkSize,), maxshape=(None,), chunks=(self.chunkSize,), dtype='float16')
 
         self.fp_world = self.fp.create_group('world_data')
 
         datasets = ['WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge', 'hasFire']
         for dataset in datasets:
-            self.fp_world_data[dataset] = self.fp_world.create_dataset(dataset, dtype='single', shape=(self.worldSize[0], self.worldSize[0], 1), maxshape=(
-                self.worldSize[0], self.worldSize[0], None), chunks=(self.worldSize[0], self.worldSize[0], 1))
+            self.fp_world_data[dataset] = self.fp_world.create_dataset(dataset, dtype='single', shape=(self.worldSize[0], self.worldSize[0], self.chunkSize), maxshape=(
+                self.worldSize[0], self.worldSize[0], None), chunks=(self.worldSize[0], self.worldSize[0], self.chunkSize))
+
+        self.currentLayer = 0
 
     def autoSaveState(self, normalInterval=720, fireInterval=3):
         '''
@@ -180,8 +184,6 @@ class World(object):
         '''
         Saves the file in a hdf5 file format
         '''
-        if not os.path.isfile(self.save_file_name):
-            raise FileNotFoundError('h5 does not exist!')
 
         # Opens file if it was not already open
         if self.fp == None:
@@ -205,9 +207,11 @@ class World(object):
         file_pointers_1D_Name = ['simTime', 'onFire', 'globalTemp']
         for i in range(len(file_pointers_1D)):
             curr_fp = file_pointers_1D[i]
-            curr_fp_name = file_pointers_1D_Name[i]
-            curr_fp.resize(curr_fp.shape[0]+1, axis=0)
-            curr_fp[-1:] = world_info[curr_fp_name]
+            curr_fp_name = file_pointers_1D_Name[i]     
+            curr_fp[self.currentLayer] = world_info[curr_fp_name]
+
+            if self.currentLayer % self.chunkSize == 0:
+                curr_fp.resize(curr_fp.shape[0]+self.chunkSize, axis=0)
 
         # Saves the 2d arrays
         file_pointers_2D = self.fp_world_data
@@ -216,6 +220,10 @@ class World(object):
                                  'BiomassAmount', 'DiffTemprature', 'treeAge', 'hasFire']
         for i in range(len(file_pointers_2D)):
             curr_fp = file_pointers_2D[file_pointers_2D_keys[i]]
-            curr_fp_name = file_pointers_2D_Name[i]
-            curr_fp.resize(curr_fp.shape[2]+1, axis=2)
-            curr_fp[:, :, -1] = world_info['worldData'][curr_fp_name]
+            curr_fp_name = file_pointers_2D_Name[i]        
+            curr_fp[:, :, self.currentLayer] = world_info['worldData'][curr_fp_name]
+
+            if self.currentLayer % self.chunkSize == 0:
+                curr_fp.resize(curr_fp.shape[2]+self.chunkSize, axis=2)
+
+        self.currentLayer += 1
