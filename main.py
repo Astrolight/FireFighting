@@ -9,12 +9,12 @@ if __name__ == '__main__':
 
     start_time = time.time()
     # Step by x days
-    for hour in range(24*365):
+    while world.simTime < 24*365:
         world.step()
     end_time = time.time()
     total_time = end_time-start_time
 
-    print('Simulation took {:.2f} seconds for {} steps at {:.2f} steps per second.'.format(total_time, hour, hour/total_time))
+    print('Simulation took {:.2f} seconds'.format(total_time))
         
     world_Data = world.getInfo()['worldData']
 

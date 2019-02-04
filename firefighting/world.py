@@ -26,7 +26,7 @@ class World(object):
 
     def __init__(self, size, save_file_name='Default'):
         self.simTime = 0  # Hours
-        self.deltaTime = 1  # Hours
+        self.deltaTime = 24  # Hours
 
         # Sets the world size
         self.worldSize = (size, size)
@@ -118,10 +118,14 @@ class World(object):
         self.simTime += self.deltaTime
 
         # Updates tree age
-        self.world['treeAge'][self.world['treeAge'] != 0] += self.deltaTime
+        current_tree_age = self.world['treeAge']
+        self.world['treeAge'][current_tree_age != 0] += self.deltaTime
 
         # Temprature only changes when on fire
         if self.isOnFire:
+            # Set simulation step speed to 1 hour
+            self.deltaTime = 1
+
             # Saves simulation if on fire during specified interval
             if self.fireInterval != 0 and self.simTime % self.fireInterval == 0:
                 self.saveState()
@@ -129,6 +133,9 @@ class World(object):
             newTempratures = temprature.getWorldTemprature(self.simTime)
             self.setWorldTempratureArray(newTempratures)
         else:
+            # Set simulation step to 24 hours just because no need for smaller timestep
+            self.deltaTime = 24
+
             # If the forrest is not currently on fire and once per day
             if self.simTime % 24 == 0:
                 self.world['BiomassAmount'] = biomass.growUp(
