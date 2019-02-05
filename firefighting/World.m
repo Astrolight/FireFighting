@@ -17,8 +17,8 @@ classdef World < handle
         lastSpreadTime = -100
         lastSaveTime = -100
         
-        % H5 file pointer
-        fp
+        % H5 file id
+        h5id
     end
     
     methods
@@ -82,7 +82,7 @@ classdef World < handle
         function obj = create_h5(obj, filename) 
             true_filename = strcat('Datasets/', filename);
             
-            obj.fp = H5F.create(true_filename);
+            obj.h5id = H5F.create(true_filename);
         end
     end
 end
