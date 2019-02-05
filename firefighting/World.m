@@ -18,7 +18,14 @@ classdef World < handle
         lastSaveTime = -100
         
         % H5 file id
-        h5id
+        h5_file
+        chunksize = 16
+        
+        % 1D data sets
+        h51D = {'simTime', 'onFire'};
+        
+        % 2D data sets
+        h52D = {'WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge', 'hasFire'};
     end
     
     methods
@@ -80,9 +87,20 @@ classdef World < handle
     % Methods that should only be used by the class itself, not the user
     methods (Access = protected)
         function obj = create_h5(obj, filename) 
-            true_filename = strcat('Datasets/', filename);
+            obj.h5_file = fullfile(pwd, 'Datasets/', filename);
             
-            obj.h5id = H5F.create(true_filename);
+            % Initalize a blank h5 file
+            H5F.create(obj.h5_file).close;
+            
+            % Init 1D datasets
+            h5create(obj.h5_file, '/simTime', [1, Inf], 'ChunkSize', [1, obj.chunksize], 'Datatype', 'uint32');
+            h5create(obj.h5_file, '/onFire', [1, Inf], 'ChunkSize', [1, obj.chunksize], 'Datatype', 'uint8');
+            
+            % Init 2D datasets
+            for dataset = obj.h52D
+                h5create(obj.h5_file, char(strcat('/world_data/' ,dataset)), [obj.fullWorldSize, Inf],...
+                    'ChunkSize', [obj.fullWorldSize, obj.chunksize], 'Datatype', 'single');
+            end
         end
     end
 end
