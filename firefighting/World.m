@@ -50,9 +50,30 @@ classdef World < handle
             obj.world.BiomassAmount = growUp(randomBiomass, randomAges, 24 * obj.deltaTime);
         end    
         
+        function Info = getInfo(obj)
+            % Returns
+            % -------
+            % out: dict
+            %     Contains information on the current state of the simulation
+
+            Info = struct('simTime', obj.simTime,...
+                'onFire', obj.isOnFire,...
+                'worldSize', obj.fullWorldSize,...
+                'worldData', obj.world);
+        end
         
         function obj = step(obj)
             
+        end
+        
+        function autoSaveState(obj, normalInterval, fireInterval)
+            % Autosaves data to the h5 file every x timesteps.
+            %
+            % Set to 0 to disable auto save
+            %
+            % Default is to save every simulation 720 steps and every 3 steps during a fire
+            obj.normalInterval = normalInterval;
+            obj.fireInterval = fireInterval;
         end
     end
     

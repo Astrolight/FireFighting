@@ -7,7 +7,7 @@ world.initRandomBiomass()
 start_time = now;
 % Step by x days
 while world.simTime < 24*365
-    world.step()
+    world.step();
 end
 end_time = now;
 total_time = end_time-start_time;
