@@ -41,14 +41,13 @@ classdef World < handle
         
         function obj = initRandomBiomass(obj)
             % Generates a random ammount of biomass and age
-            randomAges = 120*365*24*np.random.random_sample(self.worldSize);
+            randomAges = 120*365*24*rand(obj.fullWorldSize);
 
-            randomBiomass = 14385*np.random.random_sample(self.worldSize);
+            randomBiomass = 14385*rand(obj.fullWorldSize);
 
-            self.world['treeAge'] = randomAges;
+            obj.world.treeAge = randomAges;
 
-            self.world['BiomassAmount'] = biomass.growUp(...
-                randomBiomass, randomAges, 24 * self.deltaTime);
+            obj.world.BiomassAmount = growUp(randomBiomass, randomAges, 24 * obj.deltaTime);
         end    
         
         
