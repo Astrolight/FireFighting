@@ -58,8 +58,10 @@ classdef World < handle
     
     % Methods that should only be used by the class itself, not the user
     methods (Access = protected)
-        function obj = create_h5(obj, filename)
-            obj.fp = H5F.create(filename);
+        function obj = create_h5(obj, filename) 
+            true_filename = strcat('Datasets/', filename);
+            
+            obj.fp = H5F.create(true_filename);
         end
     end
 end
