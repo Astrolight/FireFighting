@@ -16,6 +16,10 @@ classdef World < handle
         % Veribles to make sure simulation is steped only when needed
         lastSpreadTime = -100
         lastSaveTime = -100
+        
+        % How often to autosave
+        normalInterval
+        fireInterval
     end
     
     properties (Access = protected)
@@ -48,6 +52,7 @@ classdef World < handle
             current_time = strcat(char(datetime('now', 'Format', 'yyyyMMddHHmmSS')), '.h5');
 
             obj.create_h5(current_time);
+            obj.autoSaveState(720, 3);
         end
         
         function initRandomBiomass(obj)
@@ -74,7 +79,52 @@ classdef World < handle
         end
         
         function step(obj)
+            % Steps the simulation by deltaT time.
+            % Simulates tree growth and other required processes. 
             
+            obj.simTime = obj.simTime + obj.deltaTime;
+
+            % Updates tree age
+            current_tree_age = obj.world_data.treeAge;
+            obj.world_data.treeAge(current_tree_age ~= 0) = ...
+                obj.world_data.treeAge(current_tree_age ~= 0) + obj.deltaTime;
+
+            % Temprature only changes when on fire
+            if obj.isOnFire
+                % Set simulation step speed to 1 hour
+                obj.deltaTime = 1;
+
+                % Saves simulation if on fire during specified interval
+                if obj.fireInterval ~= 0 && mod(obj.simTime, obj.fireInterval) == 0
+                    obj.saveState()
+                end
+
+                %newTempratures = getWorldTemprature(obj.simTime)
+                %obj.setWorldTempratureArray(newTempratures)
+                
+            else
+                % Set simulation step to 24 hours just because no need for smaller timestep
+                obj.deltaTime = 24;
+
+                % If the forrest is not currently on fire and once per day
+                if obj.simTime - obj.lastSpreadTime >= 24
+
+                    obj.lastSpreadTime = obj.simTime;
+
+                    obj.world_data.BiomassAmount = growUp(...
+                        obj.world_data.BiomassAmount, obj.world_data.treeAge, 24 * obj.deltaTime);
+
+                    biomass_spread = spread(obj.world_data.BiomassAmount);
+                    obj.world_data.treeAge(biomass_spread) = obj.world_data.treeAge(biomass_spread) + 1;
+                end
+
+                % Saves simulation if not on fire during specified interval
+                if obj.normalInterval ~= 0 && (obj.simTime - obj.lastSaveTime) > obj.normalInterval
+                    obj.lastSaveTime = obj.simTime;
+
+                    obj.saveState();
+                end
+            end
         end
         
         function autoSaveState(obj, normalInterval, fireInterval)
