@@ -16,7 +16,9 @@ classdef World < handle
         % Veribles to make sure simulation is steped only when needed
         lastSpreadTime = -100
         lastSaveTime = -100
-        
+    end
+    
+    properties (Access = protected)
         % H5 file id
         h5_file
         chunksize = 16
