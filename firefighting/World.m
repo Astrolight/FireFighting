@@ -116,6 +116,8 @@ classdef World < handle
 
                     biomass_spread = spread(obj.world_data.BiomassAmount);
                     obj.world_data.treeAge(biomass_spread) = obj.world_data.treeAge(biomass_spread) + 1;
+                    
+                    obj.killTrees();
                 end
 
                 % Saves simulation if not on fire during specified interval
@@ -172,7 +174,7 @@ classdef World < handle
     
     % Methods that should only be used by the class itself, not the user
     methods (Access = protected)
-        function obj = create_h5(obj, filename) 
+        function  create_h5(obj, filename) 
             obj.h5_file = fullfile(pwd, 'Datasets/', filename);
             
             % Initalize a blank h5 file
@@ -187,6 +189,13 @@ classdef World < handle
                 h5create(obj.h5_file, char(strcat('/world_data/' ,dataset)), [obj.fullWorldSize, Inf],...
                     'ChunkSize', [obj.fullWorldSize, obj.chunksize], 'Datatype', 'single');
             end
+        end
+        
+        function killTrees(obj)
+            DeadTrees = obj.world_data.BiomassAmount < 0;
+            
+            obj.world_data.treeAge(DeadTrees) = 0;
+            obj.world_data.BiomassAmount(DeadTrees) = 0;
         end
     end
 end
