@@ -97,7 +97,7 @@ classdef World < handle
                 obj.deltaTime = 1;
 
                 % Spreads and burns the biomass
-                obj.world_data.treeOnFir = fireSpread(...
+                obj.world_data.treeOnFire = fireSpread(...
                     obj.world_data.BiomassAmount,obj.world_data.treeOnFire);
                 
                 obj.world_data.BiomassAmount = fireBurn(...
@@ -113,7 +113,6 @@ classdef World < handle
                 % If no trees are left on fire, disable isOnFire
                 if ~any(obj.world_data.treeOnFire)
                     obj.isOnFire = false;
-                    disp('Not on fire')
                 end
             else
                 % Set simulation step to 24 hours just because no need for smaller timestep
@@ -144,7 +143,6 @@ classdef World < handle
                 if rand(1) < obj.fireChance
                     obj.isOnFire = true;
                     obj.world_data.treeOnFire(randsample(prod(obj.fullWorldSize),1)') = true;
-                    disp('On Fire')
                 end
             end
         end

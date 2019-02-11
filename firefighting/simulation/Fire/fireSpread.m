@@ -4,7 +4,7 @@ function newTreeOnFire = fireSpread(BiomassAmount,treeOnFire)
     max_tree_mass = 14385;
 
     % Matrix with only the currently on fire tree mass
-    fireBiomass = BiomassAmount * treeOnFire;
+    fireBiomass = BiomassAmount .* treeOnFire;
     
     % Gets all values bettwen 0 and 1
     normFireBiomass = fireBiomass/max_tree_mass;
