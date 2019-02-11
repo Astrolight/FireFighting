@@ -33,7 +33,7 @@ classdef World < handle
         h51D = {'simTime', 'isOnFire'};
         
         % 2D data sets
-        h52D = {'WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge', 'hasFire'};
+        h52D = {'WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge', 'treeOnFire'};
     end
     
     methods
@@ -45,7 +45,7 @@ classdef World < handle
                       'BiomassAmount', zeros(obj.fullWorldSize),...
                       'DiffTemprature', zeros(obj.fullWorldSize),...
                       'treeAge', zeros(obj.fullWorldSize),...
-                      'hasFire', zeros(obj.fullWorldSize, 'logical'));
+                      'treeOnFire', zeros(obj.fullWorldSize, 'logical'));
             
             % Stuff for creating h5 file
             % Returns the current time in ISO 8601 UTC Format (yyyyMMddHHmmss)
@@ -94,14 +94,19 @@ classdef World < handle
                 % Set simulation step speed to 1 hour
                 obj.deltaTime = 1;
 
+                % Spreads and burns the biomass
+                obj.world_data.treeOnFir = fireSpread(...
+                    obj.world_data.BiomassAmount,obj.world_data.treeOnFire);
+                
+                obj.world_data.BiomassAmount = fireBurn(...
+                    obj.world_data.BiomassAmount,obj.world_data.treeOnFire);
+                
+                obj.killTrees();
+                
                 % Saves simulation if on fire during specified interval
                 if obj.fireInterval ~= 0 && mod(obj.simTime, obj.fireInterval) == 0
                     obj.saveState()
                 end
-
-                %newTempratures = getWorldTemprature(obj.simTime)
-                %obj.setWorldTempratureArray(newTempratures)
-                
             else
                 % Set simulation step to 24 hours just because no need for smaller timestep
                 obj.deltaTime = 24;
@@ -196,6 +201,7 @@ classdef World < handle
             
             obj.world_data.treeAge(DeadTrees) = 0;
             obj.world_data.BiomassAmount(DeadTrees) = 0;
+            obj.world_data.treeOnFire = 0;
         end
     end
 end
