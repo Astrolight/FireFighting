@@ -20,6 +20,8 @@ classdef World < handle
         % How often to autosave
         normalInterval
         fireInterval
+        
+        fireChance = 0.001 % 1% every day to set on fire
     end
     
     properties (Access = protected)
@@ -107,6 +109,12 @@ classdef World < handle
                 if obj.fireInterval ~= 0 && mod(obj.simTime, obj.fireInterval) == 0
                     obj.saveState()
                 end
+                
+                % If no trees are left on fire, disable isOnFire
+                if ~any(obj.world_data.treeOnFire)
+                    obj.isOnFire = false;
+                    disp('Not on fire')
+                end
             else
                 % Set simulation step to 24 hours just because no need for smaller timestep
                 obj.deltaTime = 24;
@@ -130,6 +138,13 @@ classdef World < handle
                     obj.lastSaveTime = obj.simTime;
 
                     obj.saveState();
+                end
+                
+                % If rand number is lower then 0.01, start fire
+                if rand(1) < obj.fireChance
+                    obj.isOnFire = true;
+                    obj.world_data.treeOnFire(randsample(prod(obj.fullWorldSize),1)') = true;
+                    disp('On Fire')
                 end
             end
         end
@@ -201,7 +216,7 @@ classdef World < handle
             
             obj.world_data.treeAge(DeadTrees) = 0;
             obj.world_data.BiomassAmount(DeadTrees) = 0;
-            obj.world_data.treeOnFire = 0;
+            obj.world_data.treeOnFire(DeadTrees) = 0;
         end
     end
 end

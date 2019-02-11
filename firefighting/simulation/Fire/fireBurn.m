@@ -3,7 +3,7 @@ function newBiomassAmount = fireBurn(BiomassAmount,treeOnFire)
 % fire step
 
     % Remove 10% of max tree mass each hour
-    biomass_deduct = 0.1*14385;
+    biomass_deduct = 0.01*14385;
     
     newBiomassAmount = BiomassAmount - biomass_deduct*treeOnFire;
 
