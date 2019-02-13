@@ -27,7 +27,7 @@ classdef World < handle
     properties (Access = protected)
         % H5 file id
         h5_file
-        chunksize = 16
+        chunksize = 64
         
         h5_frame_num = 1
         
