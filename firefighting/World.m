@@ -35,7 +35,7 @@ classdef World < handle
         h51D = {'simTime', 'isOnFire'};
         
         % 2D data sets
-        h52D = {'WaterLevel', 'BiomassAmount', 'DiffTemprature', 'treeAge', 'treeOnFire'};
+        h52D = {'BiomassAmount', 'treeAge', 'treeOnFire'};
     end
     
     methods
