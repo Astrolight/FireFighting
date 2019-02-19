@@ -16,3 +16,6 @@ end_time = datetime('now');
 total_time = end_time-start_time;
 
 disp(total_time)
+
+% Sound when done
+beep
