@@ -34,6 +34,18 @@ classdef World < handle
         % 1D data sets
         h51D = {'simTime', 'isOnFire'};
         
+        % Caching to save data and processing time for writing data
+        Cache1D = struct('simTime', [],...
+                        'isOnFire', []);
+        
+        Cache2D = struct('WaterLevel', [],...
+                      'BiomassAmount', [],...
+                      'DiffTemprature', [],...
+                      'treeAge', [],...
+                      'treeOnFire', []);
+        
+        cache_level = 1;
+        
         % 2D data sets
         h52D = {'BiomassAmount', 'treeAge', 'treeOnFire'};
     end
@@ -159,6 +171,29 @@ classdef World < handle
         
         function saveState(obj)
             % Saves the file in a hdf5 file format
+            
+            % If ammount of data is not yet at min level, save for chunking
+            % later
+            if obj.cache_level <= obj.chunksize
+                
+                % Saves the 1d arrays
+                for dataset = obj.h51D
+                    % For some reason always default to 1x1 cell
+                    char_dataset = char(dataset);
+
+                    obj.Cache1D.(char_dataset)(obj.cache_level) = obj.(char_dataset);
+                end
+
+                % Saves the 2d arrays
+                for dataset = obj.h52D
+                    char_dataset = char(dataset);
+
+                    obj.Cache2D.(char_dataset)(:, :, obj.cache_level) = double(obj.world_data.(char_dataset));
+                end
+                
+                obj.cache_level = obj.cache_level + 1;
+                return
+            end
 
             % Disables warning about values being clampted when saved
             warning('off', 'MATLAB:imagesci:hdf5dataset:datatypeOutOfRange')
@@ -168,25 +203,26 @@ classdef World < handle
                 % For some reason always default to 1x1 cell
                 char_dataset = char(dataset);
                 
-                current_val = obj.(char_dataset);
+                current_val = obj.Cache1D.(char_dataset);
                 converted_val = uint32(current_val);
                 
-                h5write(obj.h5_file, char(strcat('/', dataset)), converted_val, [1, obj.h5_frame_num], [1,1])
+                h5write(obj.h5_file, char(strcat('/', dataset)), converted_val, [1, obj.h5_frame_num], [1,obj.chunksize])
             end
 
             % Saves the 2d arrays
             for dataset = obj.h52D
                 char_dataset = char(dataset);
                 
-                current_val = double(obj.world_data.(char_dataset));
+                current_val = double(obj.Cache2D.(char_dataset));
                 
                 h5write(obj.h5_file, char(strcat('/world_data/', dataset)),...
-                    current_val, [1, 1, obj.h5_frame_num], [obj.fullWorldSize, 1])
+                    current_val, [1, 1, obj.h5_frame_num], [obj.fullWorldSize, obj.chunksize])
                 
             end
             
             % Bump up increment
-            obj.h5_frame_num = obj.h5_frame_num + 1;
+            obj.h5_frame_num = obj.h5_frame_num + obj.chunksize;
+            obj.cache_level = 1;
         end
     end
     
