@@ -3,7 +3,7 @@ function [startFire, fireLocation] = fightFireAlgorithm(Biomass_Ammount, Crit_Ma
 
     % 100 max grown trees min
     if nargin == 1
-        Crit_Mass = 14385 * 100;
+        Crit_Mass = 14385 * 10;
     end
         
     Orig_Biomass_Ammount = Biomass_Ammount;
@@ -11,9 +11,15 @@ function [startFire, fireLocation] = fightFireAlgorithm(Biomass_Ammount, Crit_Ma
     % Normalize the values to 0 to 1
     Biomass_Ammount = mat2gray(Biomass_Ammount);
 
-    BW = imbinarize(Biomass_Ammount, 'adaptive');
+    BW = Biomass_Ammount > 0.2;
 
-    s = regionprops(BW,Orig_Biomass_Ammount, 'centroid', 'BoundingBox', 'PixelValues');
+    s = regionprops(BW,Orig_Biomass_Ammount, 'WeightedCentroid', 'BoundingBox', 'PixelValues');
+    
+    if isempty(s)
+        startFire = 0;
+        fireLocation = [-1,-1];
+        return
+    end
     
     biomass_per_region = zeros(length(s),1);
     
@@ -24,11 +30,16 @@ function [startFire, fireLocation] = fightFireAlgorithm(Biomass_Ammount, Crit_Ma
     
     [max_biomass, max_index] = max(biomass_per_region);
     
-    OnEdge = [s(max_index).BoundingBox <= 1, s(max_index).BoundingBox >= size(Biomass_Ammount,1)];
+    DeadZone = 5;
+    
+    OnEdge = [s(max_index).BoundingBox(1:2) <= DeadZone, (s(max_index).BoundingBox(1:2)+s(max_index).BoundingBox(3:4)) >= size(Biomass_Ammount,1)-DeadZone];
     
     if max_biomass >= Crit_Mass && ~any(OnEdge)
         startFire = 1;
-        fireLocation = s(max_index).Centroid;
+        
+        pos = round(s(max_index).WeightedCentroid);
+        
+        fireLocation = pos;
     else
         startFire = 0;
         fireLocation = [-1,-1];

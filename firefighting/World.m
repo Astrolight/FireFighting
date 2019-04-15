@@ -92,6 +92,28 @@ classdef World < handle
                 'worldData', obj.world_data);
         end
         
+        function status = startFire(obj, Pos)
+            % Starts a fire at that index pos [y,x]
+            
+            % In case a floating point pos is given
+            
+            if length(Pos) ~= 1
+                Pos = round(Pos);
+                index = sub2ind(obj.fullWorldSize, Pos(1), Pos(2));
+            else
+                index = Pos;
+            end
+            
+            if obj.world_data.BiomassAmount(index) ~= 0
+                obj.isOnFire = true;
+                obj.world_data.treeOnFire(index) = true;
+                
+                status = 1;
+            else
+                status = 0;
+            end
+        end
+        
         function step(obj)
             % Steps the simulation by deltaT time.
             % Simulates tree growth and other required processes. 
@@ -130,7 +152,7 @@ classdef World < handle
                 % Set simulation step to 24 hours just because no need for smaller timestep
                 obj.deltaTime = 24;
 
-                % If the forrest is not currently on fire and once per day
+                % If the forest is not currently on fire and once per day
                 if obj.simTime - obj.lastSpreadTime >= 24
 
                     obj.lastSpreadTime = obj.simTime;
@@ -153,8 +175,7 @@ classdef World < handle
                 
                 % If rand number is lower then 0.01, start fire
                 if rand(1) < obj.fireChance
-                    obj.isOnFire = true;
-                    obj.world_data.treeOnFire(randsample(prod(obj.fullWorldSize),1)') = true;
+                    obj.startFire(randsample(prod(obj.fullWorldSize),1)');
                 end
             end
         end
