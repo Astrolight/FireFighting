@@ -12,6 +12,10 @@ function processedData = processData(h5_File)
     end_fire = strfind(fire_sim_time, [1,0]);
 
     all_anaylsis = [];
+    
+    if length(start_fire) ~= length(end_fire)
+        end_fire(end+1) = start_fire(end);
+    end
 
     for time_pair = [start_fire; end_fire]
         start_fire_time = time_pair(1);
