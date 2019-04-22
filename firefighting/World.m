@@ -21,7 +21,7 @@ classdef World < handle
         normalInterval
         fireInterval
         
-        fireChance = 0.0005 % 1% every day to set on fire
+        fireChance = 0.0005 % 0.05% every day to set on fire
     end
     
     properties (Access = protected)

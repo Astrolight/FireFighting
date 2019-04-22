@@ -1,4 +1,4 @@
-\documentclass[ aps, pra, notitlepage ]{revtex4-1}
+\documentclass[ aps, pra, reprint, notitlepage ]{revtex4-1}
 
 \usepackage{graphicx}% Include figure files
 \usepackage{dcolumn}% Align table columns on decimal point
@@ -9,7 +9,7 @@
 \begin{document}
 
 %Title of paper
-\title{}
+\title{Analysis of Fire Fighting Methods using Cellular Automaton Modeling}
 
 % repeat the \author .. \affiliation  etc. as needed
 % \email, \thanks, \homepage, \altaffiliation all apply to the current
@@ -21,12 +21,11 @@
 % \affiliation command. The \affiliation command should follow the
 % other information
 % \affiliation can be followed by \email, \homepage, \thanks as well.
-\author{Brent D. Foy}
-\affiliation{Department of Physics, Wright State University, Dayton, OH 45435, USA}
 
 \author{Matthew Wilson}
-\noaffiliation
 
+\author{Brent D. Foy}
+\affiliation{Department of Physics, Wright State University, Dayton, OH 45435, USA}
 
 \date{\today}
 
@@ -43,26 +42,47 @@
 
 \section{\label{Intro}Introduction}
 
-This is a test
+\subsection{\label{ForestFires} Forest Fires and their Effects}
+
+In early November of 2018, a forest fire started near Camp Creek Road in Butte County, California, grew until it was finally contained on November 25th. In this time the fire burned over 150,000 acres of land with mass evacuations for nearby towns.\cite{CampFire, CampFireReport} While this was the largest single wildfire in California's history, 2018 was only the 5th largest year of burned acres in the past decade with over 2.2 million acres burned in 2017.\cite{WildFireYear}
 
 %\begin{figure}[ht]
 %	\includegraphics[scale=1]{Pictures/interference_water_parallels_light}
 %	\caption{\label{ConstructDestructInter} Example of constructive and destructive interference.\cite{MichalsonInfer}}
 %\end{figure}
 
-\section{\label{Apparatus}Apparatus}
+\subsection{\label{CellularAutomaton} Cellular Automaton}
+
+Cellular Automaton is a method of simulation in which instead of simulating an entire system as a whole, the system is split up into a grid of many cells where each cell can only interact with its nearest cells. One of the most known uses and simplest examples of cellular automaton is Conway's Game of Life.
+
+Conway's Game of Life has three rules from which many complex patterns can emerge.\cite{ConwayGoL}
+\begin{enumerate}
+	\item A live cell survives if it has two or three live neighbors
+	\item A new cell is born whenever there are three live neighbors
+	\item All other cells either die or remain inactive
+\end{enumerate}
 
 
 
-\section{\label{Procedure}Procedure}
+\subsection{\label{Convolution} Convolution}
+
+
+\section{\label{Method}Method}
+
+The firefighting simulation is set as a set of 2D matrices. Each of the matrices represent a property of the simulation that include which tree's are on fire and the age of the tree's. On each simulation step, tree age's are incremented by the simulation step size. The amount of mass a tree has is proportional to the age of the tree. The mass increases until the tree is 100 years old, after which the tree mass rapidly decreases until it is 120 years old at which point the tree is dead.
+
+The spreading of tree's from an alive space to a dead space uses a 2D convolution. The 2D convolution is between the the mass matrix to a 3x3 matrix of value 0.01. This equates to 1\% chance for each fully grown tree around a dead space for the dead space to grow a new tree. For tree's which are not at full mass, the chance they give is linearly proportional to the current vs adult mass. This results in young or old tree's still having a chance to spread but not at the same rate. The tree mass matrix is then check for any negative values and sets these indexes to 0, equating to having a tree fully die.
+
+At the end of each time step, a random floating point value between 0-1 is generated. If the value generated is below 5E-5, a random tree is set on fire. This equates to approximately 13 years between fire events. This allows the forest enough time to recover and equates to the small chance some embers from a lightning strike or human caused fires growing large enough to start a fire on the forest scale.
 
 \section{\label{Results}Results}
 
 
 
 
-\section{\label{ResCon}Results and Conclusion}
+\section{\label{FutureWork}Future Work}
 
+Improvements include implementing climate simulation such as dry seasons or years decreasing the rate of tree growth and increasing their flammability.
 
 %\subsection{}
 %\subsubsection{}
