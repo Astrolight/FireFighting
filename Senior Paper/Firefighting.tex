@@ -55,16 +55,20 @@ In early November of 2018, a forest fire started near Camp Creek Road in Butte C
 
 Cellular Automaton is a method of simulation in which instead of simulating an entire system as a whole, the system is split up into a grid of many cells where each cell can only interact with its nearest cells. One of the most known uses and simplest examples of cellular automaton is Conway's Game of Life.
 
-Conway's Game of Life has three rules from which many complex patterns can emerge.\cite{ConwayGoL}
+Conway's Game of Life has three rules from which many complex patterns can emerge.\cite{ConwayGoL} The glider (Fig. \ref{Glider}) is one of the simplest repeating patterns in the Game of Life moving diagonally across the board repeating the same set of states every 4 simulation steps.
 \begin{enumerate}
 	\item A live cell survives if it has two or three live neighbors
 	\item A new cell is born whenever there are three live neighbors
 	\item All other cells either die or remain inactive
 \end{enumerate}
 
-
+\begin{figure}[ht]
+	\includegraphics[scale=0.75]{Pictures/Glider}
+	\caption{\label{Glider}Conway's Game of Life "Glider"}
+\end{figure}
 
 \subsection{\label{Convolution} Convolution}
+
 
 
 \section{\label{Method}Method}
@@ -82,7 +86,9 @@ At the end of each time step, a random floating point value between 0-1 is gener
 
 \section{\label{FutureWork}Future Work}
 
-Improvements include implementing climate simulation such as dry seasons or years decreasing the rate of tree growth and increasing their flammability.
+Improvements include implementing climate simulation such as dry seasons or years decreasing the rate of tree growth and increasing their flammability. With this improvement, different regions can be simulated from the rainy Midwest to the hot and dry west.
+
+Future work could also include implementing wind biasing on fire spreading such that a strong wind to the west would decrease the chance a fire would spread to the east but increase the chance to spread to the west.
 
 %\subsection{}
 %\subsubsection{}
