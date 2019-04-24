@@ -69,6 +69,8 @@ Conway's Game of Life has three rules from which many complex patterns can emerg
 
 \subsection{\label{Convolution} Convolution}
 
+A 2D convolution is a function that takes in a 2D matrix and a kernel. The kernel is usually smaller matrix that is "slid" over the larger matrix. Convolutions are largely used in neural networks and computer vision applications. 2D convolutions are especially useful in cellular automaton applications due to matrix math being much more optimized then for loops.
+
 \begin{figure}[ht]
 	\includegraphics[scale=0.5]{Pictures/StaticConvolution}
 	\caption{\label{2DConvolutionFig}2D convolution with zero padding and a 3x3 kernel}
@@ -82,9 +84,21 @@ The spreading of tree's from an alive space to a dead space uses a 2D convolutio
 
 At the end of each time step, a random floating point value between 0-1 is generated. If the value generated is below 5E-5, a random tree is set on fire. This equates to approximately 13 years between fire events. This allows the forest enough time to recover and equates to the small chance some embers from a lightning strike or human caused fires growing large enough to start a fire on the forest scale.
 
+When their is a fire event going on, a binary matrix with the binary value for each tree being on fire is multiplied element by element by the normalized tree mass in each cell. A 2D convolution is then done with a 5x5 kernal with a Gaussian distribution (Fig. \ref{GuassDist}).
+	
+\begin{figure}[ht]
+	\includegraphics[scale=0.7]{Pictures/Guassian}
+	\caption{\label{GuassDist} 5x5 Gaussian Kernel}
+\end{figure}	
+
+
+
 \section{\label{Results}Results}
 
-
+\begin{figure}[ht]
+	\includegraphics[scale=0.5]{Pictures/ForestImage}
+	\caption{\label{SimulationSlice} Single frame of simulation. Lighter areas have more mass}
+\end{figure}
 
 
 \section{\label{FutureWork}Future Work}

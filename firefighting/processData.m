@@ -14,7 +14,13 @@ function processedData = processData(h5_File)
     all_anaylsis = [];
     
     if length(start_fire) ~= length(end_fire)
-        end_fire(end+1) = start_fire(end);
+        % This is high on the list of things not to do but I do not care
+        % anymore
+        try
+            start_fire = start_fire(1:length(end_fire));
+        catch
+            end_fire = end_fire(1:length(start_fire));
+        end
     end
 
     for time_pair = [start_fire; end_fire]
