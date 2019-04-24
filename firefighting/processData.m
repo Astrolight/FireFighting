@@ -38,6 +38,6 @@ function processedData = processData(h5_File)
         all_anaylsis = [all_anaylsis, curr_anal_struct];
     end
     
-    processedData = all_anaylsis;
+    processedData = all_anaylsis(2:end);
 end
 
