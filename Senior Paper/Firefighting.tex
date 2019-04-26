@@ -5,6 +5,7 @@
 \usepackage{bm}% bold math
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{tabularx}
 
 \begin{document}
 
@@ -99,6 +100,43 @@ When their is a fire event going on, a binary matrix with the binary value for e
 	\includegraphics[scale=0.5]{Pictures/ForestImage}
 	\caption{\label{SimulationSlice} Single frame of simulation. Lighter areas have more mass}
 \end{figure}
+
+By comparing the graphs for starting fires (Fig. \ref{StartFire}) to the graphs for no protection and cutting down trees (Fig. \ref{CutTrees},\ref{NoProtect}), the starting fire has a smaller density of higher mass burned and fraction of edges burned then the other strategies.
+
+\begin{figure}[ht]
+	\includegraphics[scale=0.6]{Data/CutDownTrees}
+	\caption{\label{CutTrees} Cutting Down Trees Data}
+\end{figure}
+\begin{figure}[ht]
+	\includegraphics[scale=0.6]{Data/NoProtect}
+	\caption{\label{NoProtect} Control Data}
+\end{figure}
+\begin{figure}[ht]
+	\includegraphics[scale=0.6]{Data/OverQuenching}
+	\caption{\label{OverQuenching} Over Quenching Data}
+\end{figure}
+\begin{figure}[ht]
+	\includegraphics[scale=0.6]{Data/StartFire}
+	\caption{\label{StartFire} Start Fire Data}
+\end{figure}
+
+\begin{table*}[b]%[H] add [H] placement to break table across pages
+	\caption{\label{ProcessedData}Processed Data from Simulations}
+	\begin{ruledtabular}
+		\begin{tabular}{c||p{3cm}|p{3cm}|p{3cm}|p{3cm}}
+			Strategy&
+			Avg Mass (Tons) per Fire&
+			Avg Fraction Edge Burned per Fire&
+			Avg Acres Burned per Fire&
+			Total Acres Burned per 1000 years\\
+			\colrule
+			Cut Down Trees & $0.512$ & $1.952$ & $1.952$ & $1.952$\\
+			No Protection & $0.512$ & $1.952$ & $1.952$ & $1.952$\\
+			Over Quenching & $0.512$ & $1.952$ & $1.952$ & $1.952$\\
+			Starting Fire’s & $0.512$ & $1.952$ & $1.952$ & $1.952$\\
+		\end{tabular}
+	\end{ruledtabular}
+\end{table*}
 
 
 \section{\label{FutureWork}Future Work}
