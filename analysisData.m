@@ -6,9 +6,9 @@ Datasets = dir('Datasets');
 Datasets = Datasets([Datasets.isdir]);
 Datasets = Datasets(3:end);
 
-% Dataset, subdataset, Fire, (Edge, Mass)
+% Dataset, subdataset, Fire, (Edge, Mass, Acres)
 % Hopping only 500 fires max
-processed_data = NaN(length(Datasets), 10, 500, 2);
+processed_data = NaN(length(Datasets), 10, 500, 3);
 
 for i = 1:length(Datasets)
     folder = strcat('Datasets','/',Datasets(i).name);
@@ -25,12 +25,13 @@ for i = 1:length(Datasets)
             
             processed_data(i,n,k,1) = metricAnalysis(test(k).tiles_burned);
             processed_data(i,n,k,2) = test(k).total_burned_biomass;
+            processed_data(i,n,k,3) = sum(sum(test(k).tiles_burned));
         end
     end 
 end
 
 for i = 1:size(processed_data,1)
-    for n=1:2
+    for n=1:3
         new_processed_data(i,:,n) = reshape(processed_data(i,:,:,n),1,[]);
     end
 end
