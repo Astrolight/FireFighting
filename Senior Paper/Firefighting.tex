@@ -92,14 +92,14 @@ When their is a fire event going on, a binary matrix with the binary value for e
 	\caption{\label{GuassDist} 5x5 Gaussian Kernel}
 \end{figure}	
 
-
-
 \section{\label{Results}Results}
 
 \begin{figure}[ht]
 	\includegraphics[scale=0.5]{Pictures/ForestImage}
 	\caption{\label{SimulationSlice} Single frame of simulation. Lighter areas have more mass}
 \end{figure}
+
+Four different methods of fire fighting were tested. Over quenching in which 4 out of 5 fires are never even started which is equivalent to extremely proactive firefighting. No protection in which fires are not started or put out. Cutting down trees in a 3x3 area when a region of trees reaches a critical mass. Finally there was starting a fire in the center of a region when the mass of the region reached a critical mass and the region was not touching any of the edge cells of the matrix. Ten runs of the 4 different strategies were simulated over the course of 1000 years each. This totaled to over 60 GB of data to process and calculate.
 
 By comparing the graphs for starting fires (Fig. \ref{StartFire}) to the graphs for no protection and cutting down trees (Fig. \ref{CutTrees},\ref{NoProtect}), the starting fire has a smaller density of higher mass burned and fraction of edges burned then the other strategies.
 
@@ -144,6 +144,19 @@ By comparing the graphs for starting fires (Fig. \ref{StartFire}) to the graphs 
 Improvements include implementing climate simulation such as dry seasons or years decreasing the rate of tree growth and increasing their flammability. With this improvement, different regions can be simulated from the rainy Midwest to the hot and dry west.
 
 Future work could also include implementing wind biasing on fire spreading such that a strong wind to the west would decrease the chance a fire would spread to the east but increase the chance to spread to the west.
+
+\begin{figure}[ht]
+	\includegraphics[scale=0.5]{Pictures/Threshold/Original}
+	\caption{\label{ThreshOrig} Original slice of data}
+\end{figure}
+\begin{figure}[ht]
+	\includegraphics[scale=0.5]{Pictures/Threshold/Threshold20}
+	\caption{\label{Thresh20} Thresholding 20\% of max mass}
+\end{figure}
+\begin{figure}[ht]
+	\includegraphics[scale=0.5]{Pictures/Threshold/Centroid}
+	\caption{\label{Centroid} Centroid of thresholded region}
+\end{figure}
 
 %\subsection{}
 %\subsubsection{}
