@@ -32,7 +32,7 @@
 
 \begin{abstract}
 	% insert abstract here
-	
+	In recent decades, forest fires have become more prevalent in both the news and in the design and overall structure of civil engineering near large forests. In 2017 alone, over 2.2 million acres were burned due to fires. With increases in computer power and simulation design, different methods of firefighting can be tested without the large financial cost of implementing different designs and the risk that a bad method for combating forest fires could pose. Four different methods of fighting fires were tested using cellular automaton simulation methods. The different methods were cutting down trees or starting a controlled fire when a region of the forest reached a critical mass. A control method where fires were not influenced from human sources and extreme forest fire combating which effectively stops 4 in every 5 fires before they start. 
 \end{abstract}
 
 %\maketitle must follow title, authors, abstract, \pacs, and \keywords
@@ -67,6 +67,8 @@ Conway's Game of Life has three rules from which many complex patterns can emerg
 	\includegraphics[scale=0.75]{Pictures/Glider}
 	\caption{\label{Glider}Conway's Game of Life "Glider"}
 \end{figure}
+
+Cellular automaton has has been used in the past for forest fire simulations. Cellular automaton is both more effiecent and more accurate due to large changes in factors from different parts of the simulation which could increase or decrease the chance of a fire spreading on a local scale.\cite{CellAutmoFire}
 
 \subsection{\label{Convolution} Convolution}
 
@@ -103,6 +105,44 @@ Four different methods of fire fighting were tested. Over quenching in which 4 o
 
 By comparing the graphs for starting fires (Fig. \ref{StartFire}) to the graphs for no protection and cutting down trees (Fig. \ref{CutTrees},\ref{NoProtect}), the starting fire has a smaller density of higher mass burned and fraction of edges burned then the other strategies.
 
+\begin{table*}[b]%[H] add [H] placement to break table across pages
+	\caption{\label{ProcessedData}Processed Data from Simulations}
+	\begin{ruledtabular}
+		\begin{tabular}{c||p{3cm}|p{3cm}|p{3cm}|p{3cm}}
+			Strategy&
+			Avg Mass (Tons) per Fire&
+			Avg Fraction Edge Burned per Fire&
+			Avg Acres Burned per Fire&
+			Total Acres Burned per 1000 years\\
+			\colrule
+			Cut Down Trees & $14540 \pm 34218$ & $0.07 \pm 0.16$ & $880 \pm 1995$ & $1.298E5 \pm 499$\\
+			No Protection & $19970 \pm 31302$ & $0.06 \pm 0.15$ & $726 \pm 1833$ & $1.168E5 \pm 183$\\
+			Over Quenching & $55740 \pm 80183$ & $0.24 \pm 0.34	$ & $2824 \pm 3887$ & $7.028E4 \pm 389$\\
+			Starting Fire’s & $12640 \pm 31562$ & $0.06 \pm 0.15$ & $765 \pm 1819$ & $1.331E5 \pm 606$\\
+		\end{tabular}
+	\end{ruledtabular}
+\end{table*}
+
+
+\section{\label{FutureWork}Future Work}
+
+Improvements include implementing climate simulation such as dry seasons or years decreasing the rate of tree growth and increasing their flammability. With this improvement, different regions can be simulated from the rainy Midwest to the hot and dry west.
+
+Future work could also include implementing wind biasing on fire spreading such that a strong wind to the west would decrease the chance a fire would spread to the east but increase the chance to spread to the west.\cite{WindFire}
+
+\begin{figure}[ht]
+	\includegraphics[scale=0.5]{Pictures/Threshold/Original}
+	\caption{\label{ThreshOrig} Original slice of data}
+\end{figure}
+\begin{figure}[ht]
+	\includegraphics[scale=0.5]{Pictures/Threshold/Threshold20}
+	\caption{\label{Thresh20} Thresholding 20\% of max mass}
+\end{figure}
+\begin{figure}[ht]
+	\includegraphics[scale=0.5]{Pictures/Threshold/Centroid}
+	\caption{\label{Centroid} Centroid of thresholded region}
+\end{figure}
+
 \begin{figure}[ht]
 	\includegraphics[scale=0.6]{Data/CutDownTrees}
 	\caption{\label{CutTrees} Cutting Down Trees Data}
@@ -118,44 +158,6 @@ By comparing the graphs for starting fires (Fig. \ref{StartFire}) to the graphs 
 \begin{figure}[ht]
 	\includegraphics[scale=0.6]{Data/StartFire}
 	\caption{\label{StartFire} Start Fire Data}
-\end{figure}
-
-\begin{table*}[b]%[H] add [H] placement to break table across pages
-	\caption{\label{ProcessedData}Processed Data from Simulations}
-	\begin{ruledtabular}
-		\begin{tabular}{c||p{3cm}|p{3cm}|p{3cm}|p{3cm}}
-			Strategy&
-			Avg Mass (Tons) per Fire&
-			Avg Fraction Edge Burned per Fire&
-			Avg Acres Burned per Fire&
-			Total Acres Burned per 1000 years\\
-			\colrule
-			Cut Down Trees & $0.512$ & $1.952$ & $1.952$ & $1.952$\\
-			No Protection & $0.512$ & $1.952$ & $1.952$ & $1.952$\\
-			Over Quenching & $0.512$ & $1.952$ & $1.952$ & $1.952$\\
-			Starting Fire’s & $0.512$ & $1.952$ & $1.952$ & $1.952$\\
-		\end{tabular}
-	\end{ruledtabular}
-\end{table*}
-
-
-\section{\label{FutureWork}Future Work}
-
-Improvements include implementing climate simulation such as dry seasons or years decreasing the rate of tree growth and increasing their flammability. With this improvement, different regions can be simulated from the rainy Midwest to the hot and dry west.
-
-Future work could also include implementing wind biasing on fire spreading such that a strong wind to the west would decrease the chance a fire would spread to the east but increase the chance to spread to the west.
-
-\begin{figure}[ht]
-	\includegraphics[scale=0.5]{Pictures/Threshold/Original}
-	\caption{\label{ThreshOrig} Original slice of data}
-\end{figure}
-\begin{figure}[ht]
-	\includegraphics[scale=0.5]{Pictures/Threshold/Threshold20}
-	\caption{\label{Thresh20} Thresholding 20\% of max mass}
-\end{figure}
-\begin{figure}[ht]
-	\includegraphics[scale=0.5]{Pictures/Threshold/Centroid}
-	\caption{\label{Centroid} Centroid of thresholded region}
 \end{figure}
 
 %\subsection{}
